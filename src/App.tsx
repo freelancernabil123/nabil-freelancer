@@ -13,7 +13,8 @@ import {
   onSnapshot, 
   query, 
   orderBy, 
-  updateDoc 
+  updateDoc,
+  setDoc
 } from 'firebase/firestore';
 import { 
   Rocket, 
@@ -118,7 +119,7 @@ export default function App() {
   const [adminPass, setAdminPass] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loginError, setLoginError] = useState<string | null>(null);
-  const [adminTab, setAdminTab] = useState<'publish' | 'chats'>('chats');
+  const [adminTab, setAdminTab] = useState<'publish' | 'chats' | 'settings'>('chats');
   const [replyInputMap, setReplyInputMap] = useState<{ [messageId: string]: string }>({});
 
   // App General states
@@ -129,9 +130,15 @@ export default function App() {
   const chatEndRef = useRef<HTMLDivElement>(null);
   const adminChatEndRef = useRef<HTMLDivElement>(null);
 
-  // Constants
-  const validID = 'nabil08';
-  const validPass = 'nabil.0809';
+  // Dynamic credentials from firestore settings/adminCredentials
+  const [dbAdminId, setDbAdminId] = useState('nabil08');
+  const [dbAdminPass, setDbAdminPass] = useState('nabil.0809');
+
+  // Interactive inputs for changing credentials
+  const [newAdminIdInput, setNewAdminIdInput] = useState('');
+  const [newAdminPassInput, setNewAdminPassInput] = useState('');
+  const [confirmAdminPassInput, setConfirmAdminPassInput] = useState('');
+  const [isUpdatingCredentials, setIsUpdatingCredentials] = useState(false);
 
   const categoriesList = [
     { value: 'SEO', label: 'Search Engine Optimization' },
@@ -282,10 +289,54 @@ export default function App() {
     }
   };
 
+  // 0. Synchronize custom Admin credentials from Firestore
+  useEffect(() => {
+    const unsubscribeCreds = onSnapshot(doc(db, 'settings', 'adminCredentials'), (docSnap) => {
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        if (data.adminId) setDbAdminId(data.adminId);
+        if (data.adminPass) setDbAdminPass(data.adminPass);
+      }
+    }, (error) => {
+      console.warn("Could not load credentials from Firestore:", error);
+    });
+    return () => unsubscribeCreds();
+  }, []);
+
+  // Update admin credentials in firestore
+  const handleUpdateAdminCredentials = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newAdminIdInput.trim() || !newAdminPassInput) {
+      showToast('অনুগ্রহ করে আইডি এবং পাসওয়ার্ড সম্পূর্ণ লিখুন।');
+      return;
+    }
+    if (newAdminPassInput !== confirmAdminPassInput) {
+      showToast('পাসওয়ার্ড দুটি মেলেনি! দয়া করে পুনরায় চেক করুন।');
+      return;
+    }
+
+    try {
+      setIsUpdatingCredentials(true);
+      await setDoc(doc(db, 'settings', 'adminCredentials'), {
+        adminId: newAdminIdInput.trim(),
+        adminPass: newAdminPassInput
+      });
+      showToast('আইডি এবং পাসওয়ার্ড সফলভাবে আপডেট করা হয়েছে!');
+      setNewAdminIdInput('');
+      setNewAdminPassInput('');
+      setConfirmAdminPassInput('');
+    } catch (error) {
+      console.error('Error updating credentials: ', error);
+      showToast('আপডেট ব্যর্থ হয়েছে, আবার চেষ্টা করুন।');
+    } finally {
+      setIsUpdatingCredentials(false);
+    }
+  };
+
   // Admin login handler
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (adminId.trim() === validID && adminPass === validPass) {
+    if (adminId.trim() === dbAdminId && adminPass === dbAdminPass) {
       setIsAdmin(true);
       setLoginError(null);
       sessionStorage.setItem('nabil_admin_logged', 'true');
@@ -640,7 +691,7 @@ export default function App() {
                   </div>
 
                   {/* Tabs layout inside workspace */}
-                  <div className="flex border-b border-slate-100 gap-6">
+                  <div className="flex border-b border-slate-100 gap-6 flex-wrap">
                     <button 
                       onClick={() => setAdminTab('chats')}
                       className={`pb-3 text-xs uppercase tracking-wider font-extrabold flex items-center gap-2 relative transition-all cursor-pointer ${
@@ -660,6 +711,16 @@ export default function App() {
                       <Plus className="h-4 w-4" />
                       ডিজিটাল গাইডবুক পোস্ট করুন
                       {adminTab === 'publish' && <motion.div layoutId="admActiveTab" className="absolute bottom-0 inset-x-0 h-0.5 bg-purple-600" />}
+                    </button>
+                    <button 
+                      onClick={() => setAdminTab('settings')}
+                      className={`pb-3 text-xs uppercase tracking-wider font-extrabold flex items-center gap-2 relative transition-all cursor-pointer ${
+                        adminTab === 'settings' ? 'text-purple-600' : 'text-slate-400 hover:text-slate-600'
+                      }`}
+                    >
+                      <Lock className="h-4 w-4" />
+                      লগইন আইডি ও পাসওয়ার্ড পরিবর্তন
+                      {adminTab === 'settings' && <motion.div layoutId="admActiveTab" className="absolute bottom-0 inset-x-0 h-0.5 bg-purple-600" />}
                     </button>
                   </div>
 
@@ -808,7 +869,7 @@ export default function App() {
                         )}
                       </div>
                     </div>
-                  ) : (
+                  ) : adminTab === 'publish' ? (
                     /* Categorized publisher notes list forms */
                     <form onSubmit={handleAddNote} className="space-y-4 max-w-2xl">
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -879,6 +940,100 @@ export default function App() {
                         Publish Update Note
                       </button>
                     </form>
+                  ) : (
+                    /* Settings/Credential Modification Tab Content */
+                    <div className="max-w-xl bg-white border border-slate-100/50 rounded-2xl p-4 sm:p-6 space-y-6">
+                      <div>
+                        <h4 className="text-sm font-extrabold text-slate-900 tracking-wide uppercase font-sans flex items-center gap-2">
+                          <Lock className="h-4 w-4 text-purple-600" />
+                          লগইন তথ্য পরিবর্তন করুন
+                        </h4>
+                        <p className="text-xs text-slate-500 mt-1 font-bengali">
+                          অ্যাডমিন প্যানেলে লগইন করার জন্য নতুন ইউজার আইডি এবং পাসওয়ার্ড সেট করুন। এটি ফায়ারস্টোর ডাটাবেজে সংরক্ষিত থাকবে।
+                        </p>
+                      </div>
+
+                      <form onSubmit={handleUpdateAdminCredentials} className="space-y-4 font-sans text-xs">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-[10px] font-mono uppercase tracking-wider text-slate-500 mb-1.5">
+                              Current Admin ID (চলতি আইডি)
+                            </label>
+                            <input 
+                              type="text"
+                              className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-800 focus:outline-none font-mono opacity-80"
+                              value={dbAdminId}
+                              disabled
+                            />
+                            <span className="text-[10px] text-slate-400 mt-1 block">বর্তমানে সক্রিয় অ্যাডমিন আইডি</span>
+                          </div>
+
+                          <div>
+                            <label className="block text-[10px] font-mono uppercase tracking-wider text-slate-500 mb-1.5">
+                              New Admin ID (নতুন আইডি)
+                            </label>
+                            <input 
+                              type="text" 
+                              placeholder="Enter New Admin ID"
+                              value={newAdminIdInput}
+                              onChange={(e) => setNewAdminIdInput(e.target.value)}
+                              className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-800 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-200 transition-all font-mono"
+                              required
+                            />
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-[10px] font-mono uppercase tracking-wider text-slate-500 mb-1.5">
+                              New Secure Password (নতুন পাসওয়ার্ড)
+                            </label>
+                            <input 
+                              type="password" 
+                              placeholder="••••••••"
+                              value={newAdminPassInput}
+                              onChange={(e) => setNewAdminPassInput(e.target.value)}
+                              className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-800 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-200 transition-all font-mono"
+                              required
+                            />
+                          </div>
+
+                          <div>
+                            <label className="block text-[10px] font-mono uppercase tracking-wider text-slate-500 mb-1.5">
+                              Confirm Password (পুনরায় লিখুন)
+                            </label>
+                            <input 
+                              type="password" 
+                              placeholder="••••••••"
+                              value={confirmAdminPassInput}
+                              onChange={(e) => setConfirmAdminPassInput(e.target.value)}
+                              className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-800 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-200 transition-all font-mono"
+                              required
+                            />
+                          </div>
+                        </div>
+
+                        <div className="pt-2">
+                          <button 
+                            type="submit"
+                            disabled={isUpdatingCredentials}
+                            className="bg-purple-600 hover:bg-purple-700 text-white font-extrabold px-6 py-3 text-xs rounded-xl shadow-lg shadow-purple-600/10 active:scale-95 disabled:opacity-50 transition-all cursor-pointer flex items-center gap-2 uppercase tracking-wider"
+                          >
+                            {isUpdatingCredentials ? (
+                              <>
+                                <RefreshCw className="h-3.5 w-3.5 animate-spin" />
+                                Updating...
+                              </>
+                            ) : (
+                              <>
+                                <Check className="h-3.5 w-3.5" />
+                                Save Changes (তথ্য সংরক্ষণ করুন)
+                              </>
+                            )}
+                          </button>
+                        </div>
+                      </form>
+                    </div>
                   )}
                 </div>
               )}
