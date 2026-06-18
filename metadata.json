@@ -1,0 +1,6 @@
+{
+  "name": "Nabil Freelancer",
+  "description": "Personal digital marketing portfolio and announcement platform for Nabil Freelancer.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

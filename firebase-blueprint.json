@@ -1,0 +1,90 @@
+{
+  "entities": {
+    "Note": {
+      "title": "Note",
+      "description": "Notice/announcement text content and digital marketing tips.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique note/announcement ID"
+        },
+        "content": {
+          "type": "string",
+          "description": "Notice/announcement text content"
+        },
+        "date": {
+          "type": "string",
+          "description": "Formatted date string in Bengali"
+        },
+        "tags": {
+          "type": "array",
+          "description": "List of tags associated with the note"
+        },
+        "category": {
+          "type": "string",
+          "description": "Marketing category"
+        },
+        "createdAt": {
+          "type": "number",
+          "description": "Timestamp when note was created"
+        }
+      },
+      "required": ["content", "category", "createdAt"]
+    },
+    "Message": {
+      "title": "Message",
+      "description": "Customer live help desk chat queries and replies.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique message ID"
+        },
+        "senderName": {
+          "type": "string",
+          "description": "Name of the visitor"
+        },
+        "senderEmail": {
+          "type": "string",
+          "description": "Email address of the visitor"
+        },
+        "subject": {
+          "type": "string",
+          "description": "Message subject or type"
+        },
+        "messageText": {
+          "type": "string",
+          "description": "The custom query content"
+        },
+        "replyText": {
+          "type": "string",
+          "description": "Optional response from Nabil"
+        },
+        "repliedAt": {
+          "type": "string",
+          "description": "Optionally formatted date of response"
+        },
+        "createdAt": {
+          "type": "number",
+          "description": "Timestamp when message was submitted"
+        },
+        "isRead": {
+          "type": "boolean",
+          "description": "True if read by admin"
+        }
+      },
+      "required": ["senderName", "messageText", "createdAt"]
+    }
+  },
+  "firestore": {
+    "notes/{noteId}": {
+      "schema": "Note",
+      "description": "Announcements and tips."
+    },
+    "messages/{messageId}": {
+      "schema": "Message",
+      "description": "Customer queries."
+    }
+  }
+}
