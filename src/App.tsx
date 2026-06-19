@@ -97,7 +97,6 @@ export default function App() {
   
   // Notice Publisher Inputs (Admin)
   const [noteInput, setNoteInput] = useState('');
-  const [noteTags, setNoteTags] = useState<string[]>([]);
   const [noteCategory, setNoteCategory] = useState('SEO');
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategoryFilter, setActiveCategoryFilter] = useState('All');
@@ -141,14 +140,32 @@ export default function App() {
   const [isUpdatingCredentials, setIsUpdatingCredentials] = useState(false);
 
   const categoriesList = [
-    { value: 'SEO', label: 'Search Engine Optimization' },
-    { value: 'SMM', label: 'Social Media Marketing' },
-    { value: 'SEM', label: 'PPC Business Ads' },
-    { value: 'Content', label: 'Content & Copywriting' },
-    { value: 'Email', label: 'Email Marketing' },
-    { value: 'Affiliate', label: 'Affiliate Network' },
-    { value: 'General', label: 'General Announcement' }
+    { value: 'SEO', label: 'সার্চ ইঞ্জিন অপটিমাইজেশন (SEO)' },
+    { value: 'SMM', label: 'সোশ্যাল মিডিয়া মার্কেটিং (SMM)' },
+    { value: 'SEM', label: 'গুগল এডস ও পেইড ক্যাম্পেইন (SEM)' },
+    { value: 'Content', label: 'কন্টেন্ট ও কপিরাইটিং (Content)' },
+    { value: 'Email', label: 'ইমেইল মার্কেটিং (Email)' },
+    { value: 'Affiliate', label: 'অ্যাফিলিয়েট নেটওয়ার্ক (Affiliate)' },
+    { value: 'Notes', label: 'বিশেষ নোট ও টিপস (Notes)' },
+    { value: 'General', label: 'সাধারণ নোটিশ (General)' }
   ];
+
+  const filterCategories = [
+    { value: 'All', label: '📢 সব ক্যাটাগরি' },
+    { value: 'SEO', label: '🚀 এসইও (SEO)' },
+    { value: 'SMM', label: '📱 সোশ্যাল মিডিয়া (SMM)' },
+    { value: 'SEM', label: '💰 গুগল এডস (SEM)' },
+    { value: 'Content', label: '✍️ কন্টেন্ট রাইটিং' },
+    { value: 'Email', label: '✉️ ইমেইল মার্কেটিং' },
+    { value: 'Affiliate', label: '🔗 অ্যাফিলিয়েট' },
+    { value: 'Notes', label: '📝 বিশেষ নোট' },
+    { value: 'General', label: '🔔 সাধারণ নোটিশ' }
+  ];
+
+  const getCategoryLabel = (catVal?: string) => {
+    const found = categoriesList.find(c => c.value === catVal);
+    return found ? found.label : (catVal || 'সাধারণ নোটিশ');
+  };
 
   // 1. Synchronize Notes & Announcements
   useEffect(() => {
@@ -173,7 +190,7 @@ export default function App() {
         const defaultDoc = {
           content: 'ডিজিটাল মার্কেটিং গাইডবুক আপডেট! গুগল সার্চ কনসোল ও অন-পেইজ এসইও ব্যবহার করে আপনার ওয়েবসাইটের অরগানিক রিচ বাড়িয়ে নিন ৩০০ গুণ পর্যন্ত।',
           date: new Date().toLocaleString('bn-BD', { hour12: true }),
-          tags: ['SEO', 'GoogleSearch', 'Organic'],
+          tags: [],
           category: 'SEO',
           createdAt: Date.now()
         };
@@ -363,7 +380,6 @@ export default function App() {
     const newNote = {
       content: noteInput,
       date: new Date().toLocaleString('bn-BD', { hour12: true }),
-      tags: noteTags.length > 0 ? noteTags : [noteCategory],
       category: noteCategory,
       createdAt: Date.now()
     };
@@ -371,7 +387,6 @@ export default function App() {
     try {
       await addDoc(collection(db, 'notes'), newNote);
       setNoteInput('');
-      setNoteTags([]);
       showToast('নতুন গাইডবুক আপডেট সফলভাবে লাইভ পাবলিশ করা হয়েছে!');
     } catch (error) {
       console.error('Error uploading note: ', error);
@@ -386,15 +401,6 @@ export default function App() {
       showToast('নোটটি ডাটাবেজ থেকে মুছে ফেলা হয়েছে।');
     } catch (error) {
       console.error('Error deleting: ', error);
-    }
-  };
-
-  // Add customized tags
-  const handleAddQuickTag = (tag: string) => {
-    if (!noteTags.includes(tag)) {
-      setNoteTags([...noteTags, tag]);
-    } else {
-      setNoteTags(noteTags.filter(t => t !== tag));
     }
   };
 
@@ -446,8 +452,7 @@ export default function App() {
     const q = searchQuery.toLowerCase();
     const contentMatch = note.content.toLowerCase().includes(q);
     const categoryMatch = (note.category || '').toLowerCase().includes(q);
-    const tagMatch = note.tags?.some(tag => tag.toLowerCase().includes(q)) || false;
-    return contentMatch || categoryMatch || tagMatch;
+    return contentMatch || categoryMatch;
   });
 
   // Group messages by username for Admin's live workspace view
@@ -870,76 +875,105 @@ export default function App() {
                       </div>
                     </div>
                   ) : adminTab === 'publish' ? (
-                    /* Categorized publisher notes list forms */
-                    <form onSubmit={handleAddNote} className="space-y-4 max-w-2xl">
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                          <label className="block text-[10px] font-mono uppercase tracking-wider text-slate-500 mb-1.5">
-                            Category (ডিজিটাল মার্কেটিং ক্যাটাগরি)
-                          </label>
-                          <select 
-                            value={noteCategory}
-                            onChange={(e) => setNoteCategory(e.target.value)}
-                            className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-800 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-200 transition-all font-sans"
-                          >
-                            {categoriesList.map(cat => (
-                              <option key={cat.value} value={cat.value}>{cat.label}</option>
-                            ))}
-                          </select>
+                    /* Categorized publisher notes workspace: Form + List of published notes for easy deletion */
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                      {/* Left: Create / Publish New Note */}
+                      <div className="lg:col-span-5 space-y-4">
+                        <div className="pb-3 border-b border-slate-100">
+                          <h4 className="text-sm font-bold text-slate-800 font-bengali">নতুন টিপস/গাইডবুক পোস্ট করুন</h4>
+                          <p className="text-[10px] text-slate-400 font-sans">Submit new content live immediately</p>
                         </div>
+                        <form onSubmit={handleAddNote} className="space-y-4">
+                          <div>
+                            <label className="block text-[10px] font-mono uppercase tracking-wider text-slate-500 mb-1.5">
+                              Category (ডিজিটাল মার্কেটিং ক্যাটাগরি)
+                            </label>
+                            <select 
+                              value={noteCategory}
+                              onChange={(e) => setNoteCategory(e.target.value)}
+                              className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-800 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-200 transition-all font-sans"
+                            >
+                              {categoriesList.map(cat => (
+                                <option key={cat.value} value={cat.value}>{cat.label}</option>
+                              ))}
+                            </select>
+                          </div>
 
-                        <div>
-                          <label className="block text-[10px] font-mono uppercase tracking-wider text-slate-500 mb-1.5">
-                            Quick Tag (ট্যাগ নির্বাচন করুন)
-                          </label>
-                          <div className="flex flex-wrap gap-1">
-                            {['SEO', 'SMM', 'Campaign', 'ClientTips', 'Updates', 'Announcement'].map((tag) => {
-                              const active = noteTags.includes(tag);
-                              return (
-                                <button
-                                  type="button"
-                                  key={tag}
-                                  onClick={() => handleAddQuickTag(tag)}
-                                  className={`px-3 py-1.5 rounded-lg text-[10px] font-mono transition-all border ${
-                                    active
-                                      ? 'bg-purple-600 text-white border-purple-600 font-bold'
-                                      : 'bg-white border-slate-200 text-slate-600 hover:border-purple-300'
-                                  }`}
-                                >
-                                  #{tag}
-                                </button>
-                              );
-                            })}
+                          <div>
+                            <label className="block text-[10px] font-mono uppercase tracking-wider text-slate-500 mb-1.5">
+                              Notice Content (আপনার নোট বা নোটিশ এখানে লিখুন)
+                            </label>
+                            <textarea 
+                              rows={5} 
+                              value={noteInput}
+                              onChange={(e) => setNoteInput(e.target.value)}
+                              placeholder="এসইও বা সোশ্যাল মিডিয়া ক্যাম্পেইন বিষয়ক কোনো মূল্যবান টিপস অথবা এনাউন্সমেন্ট লিখুন..."
+                              className="w-full bg-slate-50 border border-slate-200 text-slate-800 p-4 text-xs rounded-xl focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-200 transition-all placeholder-slate-400 font-bengali leading-relaxed"
+                              required
+                            />
+                            <div className="flex justify-between text-[10px] text-slate-400 mt-1.5 font-mono">
+                              <span>{noteInput.length} characters</span>
+                              <span>Press Publish to Go Live</span>
+                            </div>
+                          </div>
+
+                          <button 
+                            type="submit"
+                            className="w-full inline-flex items-center justify-center gap-2 bg-purple-600 hover:bg-purple-700 text-white font-extrabold px-6 py-3 text-xs rounded-xl shadow-lg shadow-purple-600/10 active:scale-95 transition-all cursor-pointer"
+                          >
+                            <Plus className="h-4 w-4" />
+                            Publish Update Note
+                          </button>
+                        </form>
+                      </div>
+
+                      {/* Right: Published Notes List with deletion options */}
+                      <div className="lg:col-span-7 space-y-4">
+                        <div className="pb-3 border-b border-slate-100 flex items-center justify-between">
+                          <div>
+                            <h4 className="text-sm font-bold text-slate-800 font-bengali">প্রকাশিত টিপস ও গাইডবুক সমূহ ({notes.length})</h4>
+                            <p className="text-[10px] text-slate-400 font-sans">Manage and delete existing live posts</p>
                           </div>
                         </div>
-                      </div>
 
-                      <div>
-                        <label className="block text-[10px] font-mono uppercase tracking-wider text-slate-500 mb-1.5">
-                          Notice Content (আপনার নোট বা নোটিশ এখানে লিখুন)
-                        </label>
-                        <textarea 
-                          rows={4} 
-                          value={noteInput}
-                          onChange={(e) => setNoteInput(e.target.value)}
-                          placeholder="এসইও বা সোশ্যাল মিডিয়া ক্যাম্পেইন বিষয়ক কোনো মূল্যবান টিপস অথবা এনাউন্সমেন্ট লিখুন..."
-                          className="w-full bg-slate-50 border border-slate-200 text-slate-800 p-4 text-xs rounded-xl focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-200 transition-all placeholder-slate-400 font-bengali leading-relaxed"
-                          required
-                        />
-                        <div className="flex justify-between text-[10px] text-slate-400 mt-1.5 font-mono">
-                          <span>{noteInput.length} characters</span>
-                          <span>Press Publish to Go Live</span>
+                        {/* Scrolling list for management */}
+                        <div className="space-y-3 max-h-[450px] overflow-y-auto pr-1">
+                          {notes.length === 0 ? (
+                            <div className="text-center py-10 text-slate-400 bg-slate-50 rounded-2xl border border-dashed text-xs font-bengali">
+                              কোনো প্রকাশিত আপডেট পাওয়া যায়নি।
+                            </div>
+                          ) : (
+                            notes.map((note) => (
+                              <div 
+                                key={note.id}
+                                className="p-4 bg-slate-50 border border-slate-100/80 rounded-xl flex items-start justify-between gap-3 text-xs"
+                              >
+                                <div className="space-y-1.5 flex-1 min-w-0">
+                                  <div className="flex flex-wrap items-center gap-2 text-[9px] font-bold">
+                                    <span className="px-2 py-0.5 rounded-md bg-purple-100 text-purple-700 font-bengali">
+                                      {getCategoryLabel(note.category)}
+                                    </span>
+                                    <span className="text-slate-400 font-mono">
+                                      {note.date || 'Update'}
+                                    </span>
+                                  </div>
+                                  <p className="text-slate-700 leading-relaxed font-bengali break-words pr-2 font-medium">
+                                    {note.content}
+                                  </p>
+                                </div>
+                                <button
+                                  onClick={() => handleDeleteNote(note.id)}
+                                  className="self-start bg-red-50 hover:bg-red-100 border border-red-100 p-2 text-red-500 rounded-xl active:scale-90 transition-all flex items-center gap-1 cursor-pointer shrink-0"
+                                  title="Delete Note"
+                                >
+                                  <Trash2 className="h-3.5 w-3.5" />
+                                </button>
+                              </div>
+                            ))
+                          )}
                         </div>
                       </div>
-
-                      <button 
-                        type="submit"
-                        className="inline-flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white font-extrabold px-6 py-3 text-xs rounded-xl shadow-lg shadow-purple-600/10 active:scale-95 transition-all cursor-pointer"
-                      >
-                        <Plus className="h-4 w-4" />
-                        Publish Update Note
-                      </button>
-                    </form>
+                    </div>
                   ) : (
                     /* Settings/Credential Modification Tab Content */
                     <div className="max-w-xl bg-white border border-slate-100/50 rounded-2xl p-4 sm:p-6 space-y-6">
@@ -1132,22 +1166,22 @@ export default function App() {
 
             {/* Category Selectors / Filters tabs */}
             <div className="flex flex-wrap gap-1.5 mb-6">
-              {['All', 'SEO', 'SMM', 'SEM', 'Content', 'Email', 'Affiliate', 'General'].map(cat => {
-                const active = activeCategoryFilter === cat;
+              {filterCategories.map(catItem => {
+                const active = activeCategoryFilter === catItem.value;
                 return (
                   <button
-                    key={cat}
+                    key={catItem.value}
                     onClick={() => {
-                      setActiveCategoryFilter(cat);
-                      showToast(`ফিল্টার: "${cat}" ক্যাটাগরি নিষ্কাশন করা হয়েছে।`);
+                      setActiveCategoryFilter(catItem.value);
+                      showToast(`ফিল্টার: "${catItem.label}" ক্যাটাগরি নিষ্কাশন করা হয়েছে।`);
                     }}
-                    className={`px-3 py-1.5 rounded-lg text-[10.5px] font-mono font-bold transition-all border cursor-pointer ${
+                    className={`px-3 py-1.5 rounded-lg text-[10.5px] font-bold transition-all border cursor-pointer font-bengali ${
                       active 
                         ? 'bg-purple-600 text-white border-purple-600 shadow-sm'
                         : 'bg-slate-50 border-slate-100 text-slate-600 hover:border-slate-300'
                     }`}
                   >
-                    {cat === 'All' ? '📢 All Category' : `#${cat}`}
+                    {catItem.label}
                   </button>
                 );
               })}
@@ -1186,11 +1220,11 @@ export default function App() {
                       )}
 
                       <div className="space-y-2.5">
-                        <div className="flex items-center gap-2 text-[10px] font-mono font-bold tracking-wider">
-                          <span className="uppercase px-2.5 py-0.5 rounded-md bg-purple-50 text-purple-700 border border-purple-100">
-                            Category: {note.category || 'General'}
+                        <div className="flex items-center gap-2 text-[10.5px] font-bold tracking-wider">
+                          <span className="px-2.5 py-0.5 rounded-md bg-purple-50 text-purple-700 border border-purple-100 font-bengali">
+                            {getCategoryLabel(note.category)}
                           </span>
-                          <span className="text-slate-400 flex items-center gap-1">
+                          <span className="text-slate-400 flex items-center gap-1 font-mono text-[9.5px]">
                             <Clock className="h-3 w-3" /> {note.date || 'Update'}
                           </span>
                         </div>
@@ -1199,17 +1233,6 @@ export default function App() {
                           {note.content}
                         </p>
                       </div>
-
-                      {/* Display tags */}
-                      {note.tags && note.tags.length > 0 && (
-                        <div className="flex flex-wrap gap-1.5 mt-4 pt-3 border-t border-slate-100">
-                          {note.tags.map((tag, i) => (
-                            <span key={i} className="text-[10px] text-slate-500 bg-slate-50 border border-slate-100 px-2 py-0.5 rounded-md font-mono">
-                              #{tag}
-                            </span>
-                          ))}
-                        </div>
-                      )}
                     </motion.div>
                   ))
                 )}
