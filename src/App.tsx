@@ -58,6 +58,7 @@ import {
   LifeBuoy
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+const nabilProfileImg = "/src/assets/images/nabil_exact_profile_1781858748715.jpg";
 
 // Interfaces
 interface Note {
@@ -124,6 +125,7 @@ export default function App() {
   // App General states
   const [activeChannelId, setActiveChannelId] = useState<string>('seo');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [showAboutMe, setShowAboutMe] = useState(false);
 
   // Refs
   const chatEndRef = useRef<HTMLDivElement>(null);
@@ -138,6 +140,28 @@ export default function App() {
   const [newAdminPassInput, setNewAdminPassInput] = useState('');
   const [confirmAdminPassInput, setConfirmAdminPassInput] = useState('');
   const [isUpdatingCredentials, setIsUpdatingCredentials] = useState(false);
+
+  // Dynamic About Me customization states
+  const DEFAULT_ABOUT_ME = {
+    title: "✦ About Me | ডিজিটাল মার্কেটিং স্পেশালিস্ট",
+    name: "নাবিল আহমেদ",
+    role: "Digital Marketing Specialist",
+    profileImg: nabilProfileImg,
+    bioIntro: "হ্যালো! আমি নাবিল, একজন পেশাদার ডিজিটাল মার্কেটার এবং ফ্রিল্যান্সার। বর্তমান অনলাইনের যুগে যেকোনো ব্যবসাকে সঠিক কাস্টমারের কাছে পৌঁছে দিতে এবং ব্র্যান্ডের পরিচিতি বাড়াতে আমি কাজ করছি।",
+    bioBody: "আমি বিশ্বাস করি, ডিজিটাল মার্কেটিং কেবল বিজ্ঞাপন দেওয়া নয়, বরং সঠিক স্ট্র্যাটেজি ব্যবহার করে একটি ব্যবসাকে সফল ব্র্যান্ডে রূপান্তর করা। ফ্রিল্যান্সিং সেক্টরে আমার মূল লক্ষ্য হলো ক্লায়েন্টদের ব্যবসার জন্য সাশ্রয়ী খরচে সর্বোচ্চ ফলাফল (ROI) নিশ্চিত করা।",
+    seoText: "আপনার ওয়েবসাইটকে গুগলের প্রথম পাতায় নিয়ে এসে অর্গানিক ট্রাফিক ও কাস্টমার বৃদ্ধি করা।",
+    smmText: "ফেসবুক, ইনস্টাগ্রাম, লিঙ্কডইন এবং ইউটিউবের জন্য কার্যকরী ক্যাম্পেইন ও বুস্টিং ম্যানেজমেন্ট।",
+    contentMarketingText: "টার্গেটেড অডিয়েন্সের মন জয় করার মতো আকর্ষণীয় কনটেন্ট ও প্ল্যান তৈরি করা।",
+    paidAdsText: "গুগল অ্যাডস (Google Ads) এবং মেটা অ্যাডসের মাধ্যমে নিখুঁতভাবে কাস্টমার টার্গেট করা এবং ফলাফল ট্র্যাক রাখা।",
+    whyAudienceResearch: "আপনার পণ্য বা সেবা ঠিক কার প্রয়োজন, তা ডাটা অ্যানালাইসিস করে খুঁজে বের করি।",
+    whyCostEffective: "কম বাজেটে কীভাবে সবচেয়ে ভালো আউটপুট আনা যায়, সেই প্ল্যান তৈরি করি।",
+    whyGlobalReach: "দেশীয় মার্কেটপ্লেসের পাশাপাশি আন্তর্জাতিক ব্র্যান্ডের সাথে কাজ করার অভিজ্ঞতা ও গ্লোবাল মার্কেটিং স্ট্র্যাটেজি।",
+    footerQuote: "আপনার ব্যবসাকে অনলাইনের দুনিয়ায় এক ধাপ এগিয়ে নিতে এবং গ্লোবাল অডিয়েন্সের কাছে পৌঁছাতে আমি আছি আপনার পাশে। চলুন একসাথে আপনার ব্র্যান্ডের ডিজিটাল যাত্রা শুরু করি!"
+  };
+
+  const [aboutMe, setAboutMe] = useState(DEFAULT_ABOUT_ME);
+  const [aboutMeInput, setAboutMeInput] = useState(DEFAULT_ABOUT_ME);
+  const [isUpdatingAboutMe, setIsUpdatingAboutMe] = useState(false);
 
   const categoriesList = [
     { value: 'SEO', label: 'সার্চ ইঞ্জিন অপটিমাইজেশন (SEO)' },
@@ -350,6 +374,85 @@ export default function App() {
     }
   };
 
+  // Synchronize dynamic About Me settings from Firestore
+  useEffect(() => {
+    const unsubscribeAbout = onSnapshot(doc(db, 'settings', 'aboutMe'), (docSnap) => {
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        const merged = {
+          title: data.title || DEFAULT_ABOUT_ME.title,
+          name: data.name || DEFAULT_ABOUT_ME.name,
+          role: data.role || DEFAULT_ABOUT_ME.role,
+          profileImg: data.profileImg || DEFAULT_ABOUT_ME.profileImg,
+          bioIntro: data.bioIntro || DEFAULT_ABOUT_ME.bioIntro,
+          bioBody: data.bioBody || DEFAULT_ABOUT_ME.bioBody,
+          seoText: data.seoText || DEFAULT_ABOUT_ME.seoText,
+          smmText: data.smmText || DEFAULT_ABOUT_ME.smmText,
+          contentMarketingText: data.contentMarketingText || DEFAULT_ABOUT_ME.contentMarketingText,
+          paidAdsText: data.paidAdsText || DEFAULT_ABOUT_ME.paidAdsText,
+          whyAudienceResearch: data.whyAudienceResearch || DEFAULT_ABOUT_ME.whyAudienceResearch,
+          whyCostEffective: data.whyCostEffective || DEFAULT_ABOUT_ME.whyCostEffective,
+          whyGlobalReach: data.whyGlobalReach || DEFAULT_ABOUT_ME.whyGlobalReach,
+          footerQuote: data.footerQuote || DEFAULT_ABOUT_ME.footerQuote,
+        };
+        setAboutMe(merged);
+        setAboutMeInput(merged);
+      }
+    }, (error) => {
+      console.warn("Could not load About Me details from Firestore:", error);
+    });
+    return () => unsubscribeAbout();
+  }, []);
+
+  // Update About Me profile in firestore
+  const handleUpdateAboutMe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      setIsUpdatingAboutMe(true);
+      await setDoc(doc(db, 'settings', 'aboutMe'), {
+        title: aboutMeInput.title,
+        name: aboutMeInput.name,
+        role: aboutMeInput.role,
+        profileImg: aboutMeInput.profileImg,
+        bioIntro: aboutMeInput.bioIntro,
+        bioBody: aboutMeInput.bioBody,
+        seoText: aboutMeInput.seoText,
+        smmText: aboutMeInput.smmText,
+        contentMarketingText: aboutMeInput.contentMarketingText,
+        paidAdsText: aboutMeInput.paidAdsText,
+        whyAudienceResearch: aboutMeInput.whyAudienceResearch,
+        whyCostEffective: aboutMeInput.whyCostEffective,
+        whyGlobalReach: aboutMeInput.whyGlobalReach,
+        footerQuote: aboutMeInput.footerQuote,
+      });
+      showToast('আপনার প্রফাইল এবং ডেসক্রিপশন সফলভাবে আপডেট করা হয়েছে!');
+    } catch (error) {
+      console.error('Error updating About Me settings: ', error);
+      showToast('আপডেট ব্যর্থ হয়েছে, আবার চেষ্টা করুন।');
+    } finally {
+      setIsUpdatingAboutMe(false);
+    }
+  };
+
+  // Image upload base64 converter helper
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 800000) { // Limit to 800KB for Firestore documents limit
+        showToast("দয়া করে ৮০০ কেবি এর নিচের সাইজের ছবি আপলোড করুন।");
+        return;
+      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (typeof reader.result === 'string') {
+          setAboutMeInput(prev => ({ ...prev, profileImg: reader.result as string }));
+          showToast("ছবি সফলভাবে নির্বাচন করা হয়েছে!");
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   // Admin login handler
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -536,6 +639,156 @@ export default function App() {
         )}
       </AnimatePresence>
 
+      {/* Absolute About Me Overlay Modal */}
+      <AnimatePresence>
+        {showAboutMe && (
+          <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 sm:p-6 md:p-10">
+            {/* Backdrop cover */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowAboutMe(false)}
+              className="fixed inset-0 bg-slate-900/60 backdrop-blur-md cursor-pointer"
+            />
+
+            {/* Modal Body Card */}
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 15 }}
+              transition={{ type: "spring", duration: 0.5 }}
+              className="relative bg-white rounded-3xl w-full max-w-4xl shadow-2xl border border-slate-100 overflow-hidden flex flex-col md:flex-row z-10 max-h-[90vh] md:max-h-[85vh]"
+            >
+              {/* Corner Close button */}
+              <button 
+                onClick={() => setShowAboutMe(false)}
+                className="absolute top-4 right-4 bg-slate-50 border border-slate-100 hover:bg-red-50 hover:text-red-650 hover:border-red-100 p-2 rounded-full cursor-pointer transition-all z-20"
+                title="মেম্বার ড্যাশবোর্ড বন্ধ করুন"
+              >
+                <X className="h-5 w-5" />
+              </button>
+
+              {/* SECTION 1: Avatar Side Panel (Left column) */}
+              <div className="w-full md:w-[35%] bg-slate-50 border-r border-slate-100/80 p-6 flex flex-col items-center justify-center text-center relative overflow-hidden shrink-0">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-red-100/20 rounded-bl-full pointer-events-none" />
+                <div className="absolute bottom-0 left-0 w-32 h-32 bg-purple-100/10 rounded-tr-full pointer-events-none" />
+                
+                {/* Image Showcase */}
+                <div className="relative group mb-4">
+                  <div className="absolute -inset-1.5 bg-gradient-to-tr from-red-600 to-purple-500 rounded-full blur opacity-70 group-hover:opacity-100 transition duration-300 animate-pulse" />
+                  <div className="relative w-44 h-44 sm:w-48 sm:h-48 rounded-full overflow-hidden border-4 border-white shadow-xl">
+                    <img 
+                      src={aboutMe.profileImg} 
+                      alt="Nabil Ahmed Profile Picture" 
+                      className="w-full h-full object-cover object-center scale-100 group-hover:scale-105 transition-transform duration-500"
+                      referrerPolicy="no-referrer"
+                    />
+                  </div>
+                </div>
+
+                <h4 className="text-md sm:text-lg font-black text-slate-805 font-bengali tracking-wide leading-none">{aboutMe.name}</h4>
+                <p className="text-[10px] sm:text-xs font-mono text-purple-600 mt-1.5 font-extrabold uppercase tracking-widest">{aboutMe.role}</p>
+                <div className="mt-3.5 flex flex-wrap gap-1.5 justify-center">
+                  <span className="bg-red-50 text-red-650 px-2.5 py-0.5 rounded-md text-[9px] font-mono font-bold tracking-wider uppercase border border-red-100">SEO Expert</span>
+                  <span className="bg-purple-50 text-purple-600 px-2.5 py-0.5 rounded-md text-[9px] font-mono font-bold tracking-wider uppercase border border-purple-100">SMM Master</span>
+                </div>
+              </div>
+
+              {/* SECTION 2: Description Text Details Panel (Right column) */}
+              <div className="flex-1 p-6 sm:p-8 overflow-y-auto flex flex-col justify-between max-h-[50vh] md:max-h-none">
+                <div className="space-y-6">
+                  {/* Headline Title */}
+                  <div className="border-b border-slate-100 pb-3">
+                    <h3 className="text-lg sm:text-xl font-extrabold text-slate-900 flex items-center gap-2 font-bengali leading-none">
+                      <Sparkles className="h-5 w-5 text-red-500" />
+                      <span>{aboutMe.title}</span>
+                    </h3>
+                  </div>
+
+                  {/* Intro description paragraphs in sweet Bengali */}
+                  <div className="space-y-4 text-xs text-slate-600 font-bengali leading-relaxed font-normal">
+                    <p className="text-slate-700 font-bold text-sm leading-relaxed">
+                      {aboutMe.bioIntro}
+                    </p>
+                    <p className="text-slate-600 leading-relaxed text-xs">
+                      {aboutMe.bioBody}
+                    </p>
+                  </div>
+
+                  {/* Skill Fields Section */}
+                  <div className="space-y-3">
+                    <h5 className="text-[11px] font-extrabold uppercase font-sans tracking-larger text-red-600 flex items-center gap-1.5">
+                      <Award className="h-4 w-4" />
+                      <span>আমার দক্ষতার প্রধান ক্ষেত্রসমূহ:</span>
+                    </h5>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      
+                      {/* Item 1 */}
+                      <div className="bg-slate-50 border border-slate-100 p-3 rounded-xl hover:bg-red-50/20 transition-all">
+                        <h6 className="text-xs font-black text-slate-900 font-bengali leading-none mb-1">🔍 সার্চ ইঞ্জিন অপটিমাইজেশন (SEO)</h6>
+                        <p className="text-[10.5px] text-slate-600 font-bengali leading-tight">{aboutMe.seoText}</p>
+                      </div>
+
+                      {/* Item 2 */}
+                      <div className="bg-slate-50 border border-slate-100 p-3 rounded-xl hover:bg-red-50/20 transition-all">
+                        <h6 className="text-xs font-black text-slate-900 font-bengali leading-none mb-1">📢 সোশ্যাল মিডিয়া মার্কেটিং (SMM)</h6>
+                        <p className="text-[10.5px] text-slate-600 font-bengali leading-tight">{aboutMe.smmText}</p>
+                      </div>
+
+                      {/* Item 3 */}
+                      <div className="bg-slate-50 border border-slate-100 p-3 rounded-xl hover:bg-red-50/20 transition-all">
+                        <h6 className="text-xs font-black text-slate-900 font-bengali leading-none mb-1">✍️ কনটেন্ট মার্কেটিং ও স্ট্র্যাটেজি</h6>
+                        <p className="text-[10.5px] text-slate-600 font-bengali leading-tight">{aboutMe.contentMarketingText}</p>
+                      </div>
+
+                      {/* Item 4 */}
+                      <div className="bg-slate-50 border border-slate-100 p-3 rounded-xl hover:bg-red-50/20 transition-all">
+                        <h6 className="text-xs font-black text-slate-900 font-bengali leading-none mb-1">📊 পেইড অ্যাডস ও অ্যানালিটিক্স</h6>
+                        <p className="text-[10.5px] text-slate-600 font-bengali leading-tight">{aboutMe.paidAdsText}</p>
+                      </div>
+
+                    </div>
+                  </div>
+
+                  {/* Why work with me Section */}
+                  <div className="space-y-2 pb-2">
+                    <h5 className="text-[11px] font-extrabold uppercase font-sans tracking-larger text-purple-600 flex items-center gap-1.5">
+                      <Check className="h-4 w-4" />
+                      <span>কেন আমার সাথে কাজ করবেন?</span>
+                    </h5>
+                    <div className="space-y-1.5 pl-1 text-[11px] text-slate-700 font-bengali leading-relaxed">
+                      <div className="flex items-start gap-2">
+                        <span className="text-red-500 font-bold shrink-0 mt-0.5">•</span>
+                        <span><strong>টার্গেটেড অডিয়েন্স রিসার্চ:</strong> {aboutMe.whyAudienceResearch}</span>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <span className="text-red-500 font-bold shrink-0 mt-0.5">•</span>
+                        <span><strong>কস্ট-ইফেক্টিভ সলিউশন:</strong> {aboutMe.whyCostEffective}</span>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <span className="text-red-500 font-bold shrink-0 mt-0.5">•</span>
+                        <span><strong>গ্লোবাল রিচ:</strong> {aboutMe.whyGlobalReach}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+
+                {/* Footer Quote banner */}
+                <div className="mt-4 pt-3.5 border-t border-slate-100 bg-red-50/40 p-3.5 rounded-xl border border-red-100/50">
+                  <p className="text-xs font-medium text-slate-800 font-bengali text-center italic leading-relaxed">
+                    {aboutMe.footerQuote}
+                  </p>
+                </div>
+
+              </div>
+
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
       {/* Lightweight, clean Sticky Glassmorphic Header */}
       <header className="sticky top-0 z-40 bg-white/70 backdrop-blur-xl border-b border-slate-100/80 px-4 sm:px-8 py-4 transition-all">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
@@ -562,6 +815,15 @@ export default function App() {
             >
               <LifeBuoy className="h-3.5 w-3.5" /> Live Support
             </a>
+
+            {/* About Me Trigger Button */}
+            <button 
+              onClick={() => setShowAboutMe(true)}
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold tracking-wider uppercase border border-slate-200 bg-white hover:border-red-300 text-slate-700 hover:text-red-600 transition-all cursor-pointer"
+            >
+              <Sparkles className="h-3.5 w-3.5 text-red-500" />
+              <span>✦ About Me</span>
+            </button>
             
             {/* Top Right Admin Control center login button */}
             <button 
@@ -975,20 +1237,21 @@ export default function App() {
                       </div>
                     </div>
                   ) : (
-                    /* Settings/Credential Modification Tab Content */
-                    <div className="max-w-xl bg-white border border-slate-100/50 rounded-2xl p-4 sm:p-6 space-y-6">
-                      <div>
-                        <h4 className="text-sm font-extrabold text-slate-900 tracking-wide uppercase font-sans flex items-center gap-2">
-                          <Lock className="h-4 w-4 text-red-600" />
-                          লগইন তথ্য পরিবর্তন করুন
-                        </h4>
-                        <p className="text-xs text-slate-500 mt-1 font-bengali">
-                          অ্যাডমিন প্যানেলে লগইন করার জন্য নতুন ইউজার আইডি এবং পাসওয়ার্ড সেট করুন। এটি ফায়ারস্টোর ডাটাবেজে সংরক্ষিত থাকবে।
-                        </p>
-                      </div>
+                    /* Settings/Credential Modification Tab Content in Grid format */
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                      {/* Left side column: credentials modification */}
+                      <div className="lg:col-span-5 bg-white border border-slate-100/50 rounded-2xl p-4 sm:p-6 space-y-6">
+                        <div>
+                          <h4 className="text-sm font-extrabold text-slate-900 tracking-wide uppercase font-sans flex items-center gap-2">
+                            <Lock className="h-4 w-4 text-red-600" />
+                            লগইন তথ্য পরিবর্তন করুন
+                          </h4>
+                          <p className="text-xs text-slate-500 mt-1 font-bengali">
+                            অ্যাডমিন প্যানেলে লগইন করার জন্য নতুন ইউজার আইডি এবং পাসওয়ার্ড সেট করুন। এটি ফায়ারস্টোর ডাটাবেজে সংরক্ষিত থাকবে।
+                          </p>
+                        </div>
 
-                      <form onSubmit={handleUpdateAdminCredentials} className="space-y-4 font-sans text-xs">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <form onSubmit={handleUpdateAdminCredentials} className="space-y-4 font-sans text-xs">
                           <div>
                             <label className="block text-[10px] font-mono uppercase tracking-wider text-slate-500 mb-1.5">
                               Current Admin ID (চলতি আইডি)
@@ -1015,9 +1278,7 @@ export default function App() {
                               required
                             />
                           </div>
-                        </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                           <div>
                             <label className="block text-[10px] font-mono uppercase tracking-wider text-slate-500 mb-1.5">
                               New Secure Password (নতুন পাসওয়ার্ড)
@@ -1045,28 +1306,266 @@ export default function App() {
                               required
                             />
                           </div>
+
+                          <div className="pt-2">
+                            <button 
+                              type="submit"
+                              disabled={isUpdatingCredentials}
+                              className="w-full bg-red-600 hover:bg-red-700 text-white font-extrabold px-6 py-3 text-xs rounded-xl shadow-lg shadow-red-600/10 active:scale-95 disabled:opacity-50 transition-all cursor-pointer flex items-center justify-center gap-2 uppercase tracking-wider"
+                            >
+                              {isUpdatingCredentials ? (
+                                <>
+                                  <RefreshCw className="h-3.5 w-3.5 animate-spin" />
+                                  Updating...
+                                </>
+                              ) : (
+                                <>
+                                  <Check className="h-3.5 w-3.5" />
+                                  Save Info (লগইন তথ্য সংরক্ষণ)
+                                </>
+                              )}
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+
+                      {/* Right side column: biography & profile customization */}
+                      <div className="lg:col-span-7 bg-white border border-slate-100/50 rounded-2xl p-4 sm:p-6 space-y-6">
+                        <div>
+                          <h4 className="text-sm font-extrabold text-slate-900 tracking-wide uppercase font-sans flex items-center gap-2">
+                            <User className="h-4 w-4 text-red-600" />
+                            আমার পরিচিতি ও বায়ো সেটিংস (Bio Settings)
+                          </h4>
+                          <p className="text-xs text-slate-500 mt-1 font-bengali">
+                            আপনার About Me পেজের ছবি এবং মূল ডেসক্রিপশন পরিবর্তন করার জন্য ফিলাপ করুন। এটি সেভ করার সাথে সাথে লাইভ আপডেট হয়ে যাবে।
+                          </p>
                         </div>
 
-                        <div className="pt-2">
-                          <button 
-                            type="submit"
-                            disabled={isUpdatingCredentials}
-                            className="bg-red-600 hover:bg-red-700 text-white font-extrabold px-6 py-3 text-xs rounded-xl shadow-lg shadow-red-600/10 active:scale-95 disabled:opacity-50 transition-all cursor-pointer flex items-center gap-2 uppercase tracking-wider"
-                          >
-                            {isUpdatingCredentials ? (
-                              <>
-                                <RefreshCw className="h-3.5 w-3.5 animate-spin" />
-                                Updating...
-                              </>
-                            ) : (
-                              <>
-                                <Check className="h-3.5 w-3.5" />
-                                Save Changes (তথ্য সংরক্ষণ করুন)
-                              </>
-                            )}
-                          </button>
-                        </div>
-                      </form>
+                        <form onSubmit={handleUpdateAboutMe} className="space-y-4 font-sans text-xs">
+                          {/* Profile Photo selector */}
+                          <div className="bg-slate-50 border border-slate-100/80 p-3 sm:p-4 rounded-xl flex flex-col sm:flex-row items-center gap-4">
+                            <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden border-2 border-white shadow-md shrink-0 bg-slate-200">
+                              <img src={aboutMeInput.profileImg} className="w-full h-full object-cover" />
+                            </div>
+                            <div className="flex-1 space-y-2 w-full text-left">
+                              <span className="block text-[10px] font-mono uppercase tracking-wider text-slate-500">Profile Picture (ছবি আপলোড করুন)</span>
+                              <div className="flex flex-col sm:flex-row gap-2">
+                                {/* Native file upload */}
+                                <label className="bg-red-50 hover:bg-red-101 border border-red-200 text-red-600 font-bold px-3 py-1.5 rounded-lg text-center cursor-pointer transition-all flex items-center gap-1.5 justify-center max-w-[170px] shrink-0 text-[11px]">
+                                  <Plus className="h-3.5 w-3.5" />
+                                  <span>ছবি আপলোড করুন</span>
+                                  <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
+                                </label>
+                                
+                                {/* Direct text input for web URLs */}
+                                <input 
+                                  type="text"
+                                  placeholder="অথবা সরাসরি ছবির URL দিন"
+                                  className="flex-1 min-w-0 bg-white border border-slate-200 rounded-lg p-1.5 px-3 text-xs text-slate-800 focus:outline-none focus:border-red-500 transition-all text-[11px]"
+                                  value={aboutMeInput.profileImg}
+                                  onChange={(e) => setAboutMeInput({ ...aboutMeInput, profileImg: e.target.value })}
+                                />
+                              </div>
+                              <span className="text-[9px] text-slate-400 block font-sans">সর্বোচ্চ সীমা ৮০০ কেবি। png/jpg ছবি সমর্থন করে।</span>
+                            </div>
+                          </div>
+
+                          {/* Name and Professional Role */}
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                              <label className="block text-[10px] font-mono uppercase tracking-wider text-slate-500 mb-1.5">
+                                Full Name (নাম)
+                              </label>
+                              <input 
+                                type="text"
+                                value={aboutMeInput.name}
+                                onChange={(e) => setAboutMeInput({ ...aboutMeInput, name: e.target.value })}
+                                className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-800 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-200 transition-all font-bengali font-semibold"
+                                required
+                              />
+                            </div>
+
+                            <div>
+                              <label className="block text-[10px] font-mono uppercase tracking-wider text-slate-500 mb-1.5">
+                                Professional Role (পদবি)
+                              </label>
+                              <input 
+                                type="text"
+                                value={aboutMeInput.role}
+                                onChange={(e) => setAboutMeInput({ ...aboutMeInput, role: e.target.value })}
+                                className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-800 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-200 transition-all font-sans font-semibold"
+                                required
+                              />
+                            </div>
+                          </div>
+
+                          {/* Custom Title Card */}
+                          <div>
+                            <label className="block text-[10px] font-mono uppercase tracking-wider text-slate-500 mb-1.5">
+                              Headline Title (শিরোনাম)
+                            </label>
+                            <input 
+                              type="text"
+                              value={aboutMeInput.title}
+                              onChange={(e) => setAboutMeInput({ ...aboutMeInput, title: e.target.value })}
+                              className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-800 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-200 transition-all font-bengali"
+                              required
+                            />
+                          </div>
+
+                          {/* Bio Intro Description text */}
+                          <div>
+                            <label className="block text-[10px] font-mono uppercase tracking-wider text-slate-500 mb-1.5">
+                              Bio Introduction (পরিচিতি সূচনা)
+                            </label>
+                            <textarea 
+                              rows={2}
+                              value={aboutMeInput.bioIntro}
+                              onChange={(e) => setAboutMeInput({ ...aboutMeInput, bioIntro: e.target.value })}
+                              className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-800 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-200 transition-all font-bengali leading-relaxed text-left"
+                              required
+                            />
+                          </div>
+
+                          {/* Bio Body description */}
+                          <div>
+                            <label className="block text-[10px] font-mono uppercase tracking-wider text-slate-500 mb-1.5">
+                              Bio Main Body (মূল পরিচিতি বিবরণ)
+                            </label>
+                            <textarea 
+                              rows={3}
+                              value={aboutMeInput.bioBody}
+                              onChange={(e) => setAboutMeInput({ ...aboutMeInput, bioBody: e.target.value })}
+                              className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-800 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-200 transition-all font-bengali leading-relaxed text-left"
+                              required
+                            />
+                          </div>
+
+                          {/* Skill Customizers */}
+                          <div className="space-y-3 pt-2">
+                            <span className="block text-[10px] font-mono uppercase tracking-wider text-purple-600 font-extrabold">প্রধান দক্ষতার বিবরণ সংশোধন করুন:</span>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                              <div>
+                                <label className="block text-[9px] text-slate-500 mb-1 font-sans">1. SEO Expert Text</label>
+                                <input 
+                                  type="text"
+                                  value={aboutMeInput.seoText}
+                                  onChange={(e) => setAboutMeInput({ ...aboutMeInput, seoText: e.target.value })}
+                                  className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-[11px] text-slate-800 focus:outline-none focus:border-red-500 font-bengali"
+                                  required
+                                />
+                              </div>
+                              
+                              <div>
+                                <label className="block text-[9px] text-slate-500 mb-1 font-sans">2. SMM Master Text</label>
+                                <input 
+                                  type="text"
+                                  value={aboutMeInput.smmText}
+                                  onChange={(e) => setAboutMeInput({ ...aboutMeInput, smmText: e.target.value })}
+                                  className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-[11px] text-slate-800 focus:outline-none focus:border-red-500 font-bengali"
+                                  required
+                                />
+                              </div>
+
+                              <div>
+                                <label className="block text-[9px] text-slate-500 mb-1 font-sans">3. Content Marketing Text</label>
+                                <input 
+                                  type="text"
+                                  value={aboutMeInput.contentMarketingText}
+                                  onChange={(e) => setAboutMeInput({ ...aboutMeInput, contentMarketingText: e.target.value })}
+                                  className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-[11px] text-slate-800 focus:outline-none focus:border-red-500 font-bengali"
+                                  required
+                                />
+                              </div>
+
+                              <div>
+                                <label className="block text-[9px] text-slate-500 mb-1 font-sans">4. Paid Ads Text</label>
+                                <input 
+                                  type="text"
+                                  value={aboutMeInput.paidAdsText}
+                                  onChange={(e) => setAboutMeInput({ ...aboutMeInput, paidAdsText: e.target.value })}
+                                  className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-[11px] text-slate-800 focus:outline-none focus:border-red-500 font-bengali"
+                                  required
+                                />
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Extra reasons / Value points customization */}
+                          <div className="space-y-3 pt-2">
+                            <span className="block text-[10px] font-mono uppercase tracking-wider text-purple-600 font-extrabold">কেন আমার সাথে কাজ করবেন? বিবরণ সংশোধন করুন:</span>
+                            <div className="space-y-3">
+                              <div>
+                                <label className="block text-[9px] text-slate-500 mb-1 font-sans">1. টার্গেটেড অডিয়েন্স রিসার্চ</label>
+                                <input 
+                                  type="text"
+                                  value={aboutMeInput.whyAudienceResearch}
+                                  onChange={(e) => setAboutMeInput({ ...aboutMeInput, whyAudienceResearch: e.target.value })}
+                                  className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-[11px] text-slate-800 focus:outline-none focus:border-red-500 font-bengali"
+                                  required
+                                />
+                              </div>
+                              
+                              <div>
+                                <label className="block text-[9px] text-slate-500 mb-1 font-sans">2. কস্ট-ইফেক্টিভ সলিউশন</label>
+                                <input 
+                                  type="text"
+                                  value={aboutMeInput.whyCostEffective}
+                                  onChange={(e) => setAboutMeInput({ ...aboutMeInput, whyCostEffective: e.target.value })}
+                                  className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-[11px] text-slate-800 focus:outline-none focus:border-red-500 font-bengali"
+                                  required
+                                />
+                              </div>
+
+                              <div>
+                                <label className="block text-[9px] text-slate-500 mb-1 font-sans">3. গ্লোবাল রিচ</label>
+                                <input 
+                                  type="text"
+                                  value={aboutMeInput.whyGlobalReach}
+                                  onChange={(e) => setAboutMeInput({ ...aboutMeInput, whyGlobalReach: e.target.value })}
+                                  className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-[11px] text-slate-800 focus:outline-none focus:border-red-500 font-bengali"
+                                  required
+                                />
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Footer quote customizer */}
+                          <div>
+                            <label className="block text-[10px] font-mono uppercase tracking-wider text-slate-500 mb-1.5">
+                              Footer Quote Banner (শেষ বাণী / উক্তি)
+                            </label>
+                            <textarea 
+                              rows={3}
+                              value={aboutMeInput.footerQuote}
+                              onChange={(e) => setAboutMeInput({ ...aboutMeInput, footerQuote: e.target.value })}
+                              className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-800 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-200 transition-all font-bengali leading-relaxed text-left"
+                              required
+                            />
+                          </div>
+
+                          {/* Submission Button */}
+                          <div className="pt-2">
+                            <button 
+                              type="submit"
+                              disabled={isUpdatingAboutMe}
+                              className="w-full bg-red-600 hover:bg-red-700 text-white font-extrabold px-6 py-3 text-xs rounded-xl shadow-lg shadow-red-600/10 active:scale-95 disabled:opacity-50 transition-all cursor-pointer flex items-center justify-center gap-2 uppercase tracking-wider"
+                            >
+                              {isUpdatingAboutMe ? (
+                                <>
+                                  <RefreshCw className="h-3.5 w-3.5 animate-spin" />
+                                  Saving Profile...
+                                </>
+                              ) : (
+                                <>
+                                  <Check className="h-3.5 w-3.5" />
+                                  Save Profile (প্রোফাইল সংরক্ষণ করুন)
+                                </>
+                              )}
+                            </button>
+                          </div>
+                        </form>
+                      </div>
                     </div>
                   )}
                 </div>
