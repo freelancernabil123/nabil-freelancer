@@ -511,15 +511,15 @@ export default function App() {
   ];
 
   return (
-    <div id="app-root" className="min-h-screen bg-[#fafafc] text-slate-800 font-sans antialiased relative overflow-x-hidden selection:bg-purple-200 selection:text-purple-900">
+    <div id="app-root" className="min-h-screen bg-[#fafafc] text-slate-800 font-sans antialiased relative overflow-x-hidden selection:bg-red-100 selection:text-red-900">
       
       {/* Light aesthetic abstract background glow decorators */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-purple-100/40 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-20 left-[-10%] w-[600px] h-[600px] bg-red-100/30 rounded-full blur-[160px] pointer-events-none" />
-      <div className="absolute top-[40%] right-[-10%] w-[450px] h-[450px] bg-indigo-50/40 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-purple-100/30 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute bottom-20 left-[-10%] w-[600px] h-[600px] bg-red-100/20 rounded-full blur-[160px] pointer-events-none" />
+      <div className="absolute top-[40%] right-[-10%] w-[450px] h-[450px] bg-purple-100/20 rounded-full blur-[120px] pointer-events-none" />
       
       {/* Grid line texture overlay */}
-      <div className="absolute inset-x-0 top-0 h-[100vh] bg-[linear-gradient(rgba(109,40,217,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(109,40,217,0.015)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none opacity-80" />
+      <div className="absolute inset-x-0 top-0 h-[100vh] bg-[linear-gradient(rgba(220,38,38,0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(220,38,38,0.01)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none opacity-80" />
 
       {/* Modern Floating Toast Feedback */}
       <AnimatePresence>
@@ -528,9 +528,9 @@ export default function App() {
             initial={{ opacity: 0, y: -20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
-            className="fixed top-24 right-4 sm:right-8 z-50 bg-white border border-purple-100 shadow-[0_12px_30px_rgba(109,40,217,0.12)] px-5 py-3.5 rounded-2xl flex items-center gap-3 text-sm text-slate-800"
+            className="fixed top-24 right-4 sm:right-8 z-50 bg-white border border-purple-100 shadow-[0_12px_30px_rgba(220,38,38,0.08)] px-5 py-3.5 rounded-2xl flex items-center gap-3 text-sm text-slate-800"
           >
-            <div className="w-2 h-2 rounded-full bg-purple-600 animate-ping" />
+            <div className="w-2 h-2 rounded-full bg-red-600 animate-ping" />
             <span className="font-semibold tracking-wide font-sans">{toastMessage}</span>
           </motion.div>
         )}
@@ -540,17 +540,17 @@ export default function App() {
       <header className="sticky top-0 z-40 bg-white/70 backdrop-blur-xl border-b border-slate-100/80 px-4 sm:px-8 py-4 transition-all">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="relative w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 via-purple-500 to-red-500 flex items-center justify-center shadow-lg shadow-purple-500/10">
+            <div className="relative w-10 h-10 rounded-xl bg-gradient-to-tr from-red-600 to-purple-450 flex items-center justify-center shadow-lg shadow-red-600/10">
               <span className="text-white font-extrabold text-xl font-mono tracking-tighter">N</span>
             </div>
             <div>
               <h1 className="text-md sm:text-xl font-extrabold tracking-wider text-slate-900">
-                NABIL <span className="bg-gradient-to-r from-purple-600 to-red-500 bg-clip-text text-transparent">FREELANCER</span>
+                NABIL <span className="bg-gradient-to-r from-red-600 to-purple-550 bg-clip-text text-transparent">FREELANCER</span>
               </h1>
               <div className="flex items-center gap-1.5 mt-0.5">
                 <span className="h-2 w-2 rounded-full bg-red-500 animate-ping" />
                 <span className="h-1.5 w-1.5 rounded-full bg-red-500 absolute" />
-                <span className="text-[10px] uppercase tracking-widest text-[#6d28d9] font-bold ml-3.5 font-mono">LIVE CHET HELP DESK ACTIVE</span>
+                <span className="text-[10px] uppercase tracking-widest text-red-600 font-bold ml-3.5 font-mono">LIVE CHET HELP DESK ACTIVE</span>
               </div>
             </div>
           </div>
@@ -573,18 +573,18 @@ export default function App() {
               }}
               className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold tracking-wider uppercase border transition-all cursor-pointer ${
                 isAdmin 
-                  ? 'bg-purple-50 border-purple-200 text-purple-700 shadow-sm'
-                  : 'bg-white border-slate-200 hover:border-purple-300 text-slate-700 hover:text-purple-600'
+                  ? 'bg-purple-50 border-purple-200 text-red-600 shadow-sm font-bengali'
+                  : 'bg-white border-slate-200 hover:border-red-300 text-slate-700 hover:text-red-600'
               }`}
             >
               {isAdmin ? (
                 <>
-                  <UserCheck className="h-4 w-4 text-purple-600" />
+                  <UserCheck className="h-4 w-4 text-red-600" />
                   Nabil Portal (Admin)
                 </>
               ) : (
                 <>
-                  <Lock className="h-3.5 w-3.5" />
+                  <Lock className="h-3.5 w-3.5 text-red-500" />
                   Admin Login
                 </>
               )}
@@ -616,7 +616,7 @@ export default function App() {
                 /* Sleek and clean login modal: NO prefilled identifiers */
                 <div className="max-w-md mx-auto py-4">
                   <div className="text-center mb-6">
-                    <div className="inline-flex p-3 rounded-full bg-purple-50 text-purple-600 mb-2">
+                    <div className="inline-flex p-3 rounded-full bg-purple-50 text-red-500 mb-2">
                       <Lock className="h-6 w-6" />
                     </div>
                     <h3 className="text-lg font-bold text-slate-900 font-bengali">অ্যাডমিন কন্ট্রোল লাইভ প্যানেল</h3>
@@ -638,7 +638,7 @@ export default function App() {
                         placeholder="Enter Admin ID"
                         value={adminId}
                         onChange={(e) => setAdminId(e.target.value)}
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-200 transition-all font-mono"
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-purple-200 transition-all font-mono"
                         required
                       />
                     </div>
@@ -651,13 +651,13 @@ export default function App() {
                           placeholder="••••••••" 
                           value={adminPass}
                           onChange={(e) => setAdminPass(e.target.value)}
-                          className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-200 transition-all font-mono pr-10"
+                          className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-purple-200 transition-all font-mono pr-10"
                           required
                         />
                         <button 
                           type="button" 
                           onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-3 top-3.5 text-slate-400 hover:text-purple-600"
+                          className="absolute right-3 top-3.5 text-slate-400 hover:text-red-600"
                         >
                           {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                         </button>
@@ -666,7 +666,7 @@ export default function App() {
 
                     <button 
                       type="submit"
-                      className="w-full bg-gradient-to-r from-purple-600 to-red-500 text-white font-extrabold py-3.5 rounded-xl hover:brightness-110 active:scale-95 transition-all shadow-md shadow-purple-600/10 cursor-pointer text-xs uppercase"
+                      className="w-full bg-gradient-to-r from-red-600 to-purple-400 text-white font-extrabold py-3.5 rounded-xl hover:brightness-110 active:scale-95 transition-all shadow-md shadow-red-600/10 cursor-pointer text-xs uppercase"
                     >
                       Verify Credentials
                     </button>
@@ -700,32 +700,32 @@ export default function App() {
                     <button 
                       onClick={() => setAdminTab('chats')}
                       className={`pb-3 text-xs uppercase tracking-wider font-extrabold flex items-center gap-2 relative transition-all cursor-pointer ${
-                        adminTab === 'chats' ? 'text-purple-600' : 'text-slate-400 hover:text-slate-600'
+                        adminTab === 'chats' ? 'text-red-600' : 'text-slate-400 hover:text-slate-600'
                       }`}
                     >
                       <MessageSquare className="h-4 w-4" />
                       লাইভ চ্যাট ইনবক্স ({chatUsers.length})
-                      {adminTab === 'chats' && <motion.div layoutId="admActiveTab" className="absolute bottom-0 inset-x-0 h-0.5 bg-purple-600" />}
+                      {adminTab === 'chats' && <motion.div layoutId="admActiveTab" className="absolute bottom-0 inset-x-0 h-0.5 bg-red-600" />}
                     </button>
                     <button 
                       onClick={() => setAdminTab('publish')}
                       className={`pb-3 text-xs uppercase tracking-wider font-extrabold flex items-center gap-2 relative transition-all cursor-pointer ${
-                        adminTab === 'publish' ? 'text-purple-600' : 'text-slate-400 hover:text-slate-600'
+                        adminTab === 'publish' ? 'text-red-600' : 'text-slate-400 hover:text-slate-600'
                       }`}
                     >
                       <Plus className="h-4 w-4" />
                       ডিজিটাল গাইডবুক পোস্ট করুন
-                      {adminTab === 'publish' && <motion.div layoutId="admActiveTab" className="absolute bottom-0 inset-x-0 h-0.5 bg-purple-600" />}
+                      {adminTab === 'publish' && <motion.div layoutId="admActiveTab" className="absolute bottom-0 inset-x-0 h-0.5 bg-red-600" />}
                     </button>
                     <button 
                       onClick={() => setAdminTab('settings')}
                       className={`pb-3 text-xs uppercase tracking-wider font-extrabold flex items-center gap-2 relative transition-all cursor-pointer ${
-                        adminTab === 'settings' ? 'text-purple-600' : 'text-slate-400 hover:text-slate-600'
+                        adminTab === 'settings' ? 'text-red-600' : 'text-slate-400 hover:text-slate-600'
                       }`}
                     >
                       <Lock className="h-4 w-4" />
                       লগইন আইডি ও পাসওয়ার্ড পরিবর্তন
-                      {adminTab === 'settings' && <motion.div layoutId="admActiveTab" className="absolute bottom-0 inset-x-0 h-0.5 bg-purple-600" />}
+                      {adminTab === 'settings' && <motion.div layoutId="admActiveTab" className="absolute bottom-0 inset-x-0 h-0.5 bg-red-600" />}
                     </button>
                   </div>
 
@@ -752,12 +752,12 @@ export default function App() {
                                   onClick={() => setSelectedChatUser(user)}
                                   className={`w-full text-left p-3 rounded-2xl flex items-center justify-between transition-all border cursor-pointer ${
                                     isSelected 
-                                      ? 'bg-purple-50/60 border-purple-200 text-purple-900 font-bold' 
+                                      ? 'bg-purple-50/60 border-purple-200 text-red-700 font-bold' 
                                       : 'bg-white border-slate-100 text-slate-700 hover:bg-slate-50'
                                   }`}
                                 >
                                   <div className="flex items-center gap-2.5 min-w-0">
-                                    <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-purple-500 to-red-500 flex items-center justify-center text-white font-bold font-mono text-xs">
+                                    <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-red-500 to-purple-400 flex items-center justify-center text-white font-bold font-mono text-xs">
                                       {user.slice(0, 1).toUpperCase()}
                                     </div>
                                     <div className="truncate">
@@ -810,7 +810,7 @@ export default function App() {
                                   <div className="flex justify-start">
                                     <div className="bg-white border border-slate-100 max-w-[85%] rounded-2xl p-3 shadow-xs">
                                       <div className="flex items-center gap-2 mb-1 justify-between">
-                                        <span className="text-[9px] font-bold text-purple-600 uppercase font-mono">{msg.senderName}</span>
+                                        <span className="text-[9px] font-bold text-red-600 uppercase font-mono">{msg.senderName}</span>
                                         <span className="text-[9px] text-slate-400">
                                           {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                         </span>
@@ -824,10 +824,10 @@ export default function App() {
                                   {/* Answer bubble if replied */}
                                   {msg.replyText && (
                                     <div className="flex justify-end">
-                                      <div className="bg-purple-600 text-white max-w-[85%] rounded-2xl p-3 shadow-xs">
+                                      <div className="bg-red-600 text-white max-w-[85%] rounded-2xl p-3 shadow-xs">
                                         <div className="flex items-center gap-2 mb-1 justify-between">
-                                          <span className="text-[9px] font-mono uppercase tracking-widest font-black text-purple-100">Nabil (Admin)</span>
-                                          <span className="text-[9px] text-purple-200 font-mono">{msg.repliedAt}</span>
+                                          <span className="text-[9px] font-mono uppercase tracking-widest font-black text-red-100">Nabil (Admin)</span>
+                                          <span className="text-[9px] text-red-200 font-mono">{msg.repliedAt}</span>
                                         </div>
                                         <p className="text-xs leading-relaxed font-bengali">
                                           {msg.replyText}
@@ -839,7 +839,7 @@ export default function App() {
                                   {/* Inline quick responding workspace */}
                                   {!msg.replyText && (
                                     <div className="p-3 bg-purple-50/50 rounded-xl border border-purple-100 mt-2 space-y-2">
-                                      <p className="text-[10px] text-purple-800 font-semibold font-bengali">নাবিল স্পন্সর্ড রিপ্লাই:</p>
+                                      <p className="text-[10px] text-red-600 font-semibold font-bengali">নাবিল স্পন্সর্ড রিপ্লাই:</p>
                                       <div className="flex gap-2">
                                         <input 
                                           type="text" 
@@ -849,11 +849,11 @@ export default function App() {
                                           onKeyDown={(e) => {
                                             if (e.key === 'Enter') handleSendReply(msg.id);
                                           }}
-                                          className="flex-1 bg-white border border-purple-200 text-xs text-slate-800 p-2 rounded-lg focus:outline-none focus:border-purple-600 font-bengali"
+                                          className="flex-1 bg-white border border-purple-200 text-xs text-slate-800 p-2 rounded-lg focus:outline-none focus:border-red-600 font-bengali"
                                         />
                                         <button 
                                           onClick={() => handleSendReply(msg.id)}
-                                          className="bg-purple-600 hover:bg-purple-700 text-white text-xs px-4 rounded-lg flex items-center justify-center font-bold"
+                                          className="bg-red-600 hover:bg-red-700 text-white text-xs px-4 rounded-lg flex items-center justify-center font-bold"
                                         >
                                           Send
                                         </button>
@@ -867,7 +867,7 @@ export default function App() {
                           </>
                         ) : (
                           <div className="flex-1 flex flex-col items-center justify-center text-center p-8 bg-slate-50 border border-slate-100 border-dashed rounded-3xl text-slate-400">
-                            <MessageCircle className="h-10 w-10 text-purple-300 animate-pulse mb-2" />
+                            <MessageCircle className="h-10 w-10 text-red-300 animate-pulse mb-2" />
                             <h4 className="text-sm font-bold text-slate-700 font-bengali">কোনো চ্যাট ক্লায়েন্ট সিলেক্ট করা নেই</h4>
                             <p className="text-xs text-slate-500 mt-0.5">বাম প্যানেলে গ্রাহক নাম সিলেক্ট করে লাইভ চ্যাট কন্ট্রোল শুরু করুন।</p>
                           </div>
@@ -891,7 +891,7 @@ export default function App() {
                             <select 
                               value={noteCategory}
                               onChange={(e) => setNoteCategory(e.target.value)}
-                              className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-800 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-200 transition-all font-sans"
+                              className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-800 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-200 transition-all font-sans"
                             >
                               {categoriesList.map(cat => (
                                 <option key={cat.value} value={cat.value}>{cat.label}</option>
@@ -908,7 +908,7 @@ export default function App() {
                               value={noteInput}
                               onChange={(e) => setNoteInput(e.target.value)}
                               placeholder="এসইও বা সোশ্যাল মিডিয়া ক্যাম্পেইন বিষয়ক কোনো মূল্যবান টিপস অথবা এনাউন্সমেন্ট লিখুন..."
-                              className="w-full bg-slate-50 border border-slate-200 text-slate-800 p-4 text-xs rounded-xl focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-200 transition-all placeholder-slate-400 font-bengali leading-relaxed"
+                              className="w-full bg-slate-50 border border-slate-200 text-slate-800 p-4 text-xs rounded-xl focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-200 transition-all placeholder-slate-400 font-bengali leading-relaxed"
                               required
                             />
                             <div className="flex justify-between text-[10px] text-slate-400 mt-1.5 font-mono">
@@ -919,7 +919,7 @@ export default function App() {
 
                           <button 
                             type="submit"
-                            className="w-full inline-flex items-center justify-center gap-2 bg-purple-600 hover:bg-purple-700 text-white font-extrabold px-6 py-3 text-xs rounded-xl shadow-lg shadow-purple-600/10 active:scale-95 transition-all cursor-pointer"
+                            className="w-full inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white font-extrabold px-6 py-3 text-xs rounded-xl shadow-lg shadow-red-600/10 active:scale-95 transition-all cursor-pointer"
                           >
                             <Plus className="h-4 w-4" />
                             Publish Update Note
@@ -950,7 +950,7 @@ export default function App() {
                               >
                                 <div className="space-y-1.5 flex-1 min-w-0">
                                   <div className="flex flex-wrap items-center gap-2 text-[9px] font-bold">
-                                    <span className="px-2 py-0.5 rounded-md bg-purple-100 text-purple-700 font-bengali">
+                                    <span className="px-2 py-0.5 rounded-md bg-purple-50 text-red-600 border border-purple-100 font-bengali">
                                       {getCategoryLabel(note.category)}
                                     </span>
                                     <span className="text-slate-400 font-mono">
@@ -979,7 +979,7 @@ export default function App() {
                     <div className="max-w-xl bg-white border border-slate-100/50 rounded-2xl p-4 sm:p-6 space-y-6">
                       <div>
                         <h4 className="text-sm font-extrabold text-slate-900 tracking-wide uppercase font-sans flex items-center gap-2">
-                          <Lock className="h-4 w-4 text-purple-600" />
+                          <Lock className="h-4 w-4 text-red-650" />
                           লগইন তথ্য পরিবর্তন করুন
                         </h4>
                         <p className="text-xs text-slate-500 mt-1 font-bengali">
@@ -1011,7 +1011,7 @@ export default function App() {
                               placeholder="Enter New Admin ID"
                               value={newAdminIdInput}
                               onChange={(e) => setNewAdminIdInput(e.target.value)}
-                              className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-800 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-200 transition-all font-mono"
+                              className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-800 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-200 transition-all font-mono"
                               required
                             />
                           </div>
@@ -1027,7 +1027,7 @@ export default function App() {
                               placeholder="••••••••"
                               value={newAdminPassInput}
                               onChange={(e) => setNewAdminPassInput(e.target.value)}
-                              className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-800 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-200 transition-all font-mono"
+                              className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-800 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-200 transition-all font-mono"
                               required
                             />
                           </div>
@@ -1041,7 +1041,7 @@ export default function App() {
                               placeholder="••••••••"
                               value={confirmAdminPassInput}
                               onChange={(e) => setConfirmAdminPassInput(e.target.value)}
-                              className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-800 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-200 transition-all font-mono"
+                              className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-800 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-200 transition-all font-mono"
                               required
                             />
                           </div>
@@ -1051,7 +1051,7 @@ export default function App() {
                           <button 
                             type="submit"
                             disabled={isUpdatingCredentials}
-                            className="bg-purple-600 hover:bg-purple-700 text-white font-extrabold px-6 py-3 text-xs rounded-xl shadow-lg shadow-purple-600/10 active:scale-95 disabled:opacity-50 transition-all cursor-pointer flex items-center gap-2 uppercase tracking-wider"
+                            className="bg-red-600 hover:bg-red-700 text-white font-extrabold px-6 py-3 text-xs rounded-xl shadow-lg shadow-red-600/10 active:scale-95 disabled:opacity-50 transition-all cursor-pointer flex items-center gap-2 uppercase tracking-wider"
                           >
                             {isUpdatingCredentials ? (
                               <>
@@ -1081,7 +1081,7 @@ export default function App() {
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-purple-100 shadow-sm text-xs font-bold text-purple-600"
+            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-purple-100 shadow-sm text-xs font-bold text-red-600"
           >
             <Sparkles className="h-3.5 w-3.5 text-red-500" />
             <span>Digital reach redefined in minimalist performance</span>
@@ -1094,7 +1094,7 @@ export default function App() {
             className="text-4xl sm:text-6xl font-extrabold tracking-tight text-slate-900 leading-tight font-bengali"
           >
             ডিজিটাল মার্কেটিং সলিউশন <br />
-            <span className="bg-gradient-to-r from-purple-600 via-purple-500 to-red-500 bg-clip-text text-transparent font-sans">
+            <span className="bg-gradient-to-r from-red-600 via-purple-400 to-red-500 bg-clip-text text-transparent font-sans">
               Organic Reach & High ROI Performance
             </span>
           </motion.h2>
@@ -1116,7 +1116,7 @@ export default function App() {
           >
             <a 
               href="#help-center" 
-              className="bg-purple-600 hover:bg-purple-700 text-white font-extrabold px-6 py-3.5 text-xs rounded-xl shadow-lg shadow-purple-600/10 active:scale-95 transition-all uppercase tracking-wider flex items-center gap-1.5"
+              className="bg-red-650 hover:bg-red-700 text-white font-extrabold px-6 py-3.5 text-xs rounded-xl shadow-lg shadow-red-650/10 active:scale-95 transition-all uppercase tracking-wider flex items-center gap-1.5"
             >
               <MessageSquare className="h-4 w-4" />
               লাইভ হেল্প সেন্টার চ্যাট
@@ -1124,7 +1124,7 @@ export default function App() {
             
             <a 
               href="#channel-hub" 
-              className="bg-white border border-slate-200 text-slate-700 hover:border-purple-300 font-extrabold px-6 py-3.5 text-xs rounded-xl hover:text-purple-600 active:scale-95 transition-all uppercase tracking-wider flex items-center gap-1"
+              className="bg-white border border-slate-200 text-slate-700 hover:border-red-300 font-extrabold px-6 py-3.5 text-xs rounded-xl hover:text-red-650 active:scale-95 transition-all uppercase tracking-wider flex items-center gap-1"
             >
               <span>Explore Marketing Blueprint</span>
               <ChevronRight className="h-3.5 w-3.5" />
@@ -1138,11 +1138,11 @@ export default function App() {
           
           {/* Categorized notes/Updates live bullets */}
           <section id="announcements" className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-8 shadow-sm relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-24 h-24 bg-purple-50 rounded-bl-full pointer-events-none" />
+            <div className="absolute top-0 right-0 w-24 h-24 bg-purple-100/30 rounded-bl-full pointer-events-none" />
 
             <div className="pb-4 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
               <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center">
+                <div className="w-9 h-9 rounded-lg bg-purple-50 border border-purple-100/50 text-red-600 flex items-center justify-center">
                   <Bell className="h-5 w-5" />
                 </div>
                 <div>
@@ -1159,7 +1159,7 @@ export default function App() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="টিপস বা নোটিশ সার্চ করুন..."
-                  className="bg-slate-50 border border-slate-100 rounded-lg pl-8 pr-3 py-1.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-purple-400 w-full sm:w-48 transition-all"
+                  className="bg-slate-50 border border-slate-100 rounded-lg pl-8 pr-3 py-1.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-red-400 w-full sm:w-48 transition-all"
                 />
               </div>
             </div>
@@ -1177,7 +1177,7 @@ export default function App() {
                     }}
                     className={`px-3 py-1.5 rounded-lg text-[10.5px] font-bold transition-all border cursor-pointer font-bengali ${
                       active 
-                        ? 'bg-purple-600 text-white border-purple-600 shadow-sm'
+                        ? 'bg-red-600 text-white border-red-600 shadow-sm'
                         : 'bg-slate-50 border-slate-100 text-slate-600 hover:border-slate-300'
                     }`}
                   >
@@ -1206,7 +1206,7 @@ export default function App() {
                       initial={{ opacity: 0, scale: 0.98 }}
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0 }}
-                      className="p-5 bg-white border border-slate-100 rounded-2xl hover:border-purple-100 transition-all shadow-xs relative group flex flex-col justify-between"
+                      className="p-5 bg-white border border-slate-100 rounded-2xl hover:border-red-100 transition-all shadow-xs relative group flex flex-col justify-between"
                     >
                       {/* Delete absolute button for admins */}
                       {isAdmin && (
@@ -1221,7 +1221,7 @@ export default function App() {
 
                       <div className="space-y-2.5">
                         <div className="flex items-center gap-2 text-[10.5px] font-bold tracking-wider">
-                          <span className="px-2.5 py-0.5 rounded-md bg-purple-50 text-purple-700 border border-purple-100 font-bengali">
+                          <span className="px-2.5 py-0.5 rounded-md bg-purple-50 text-red-650 border border-purple-100 font-bengali">
                             {getCategoryLabel(note.category)}
                           </span>
                           <span className="text-slate-400 flex items-center gap-1 font-mono text-[9.5px]">
@@ -1261,11 +1261,11 @@ export default function App() {
                     }}
                     className={`flex flex-col items-center justify-center p-3 rounded-2xl border text-center transition-all cursor-pointer ${
                       isActive 
-                        ? 'bg-purple-600 text-white border-purple-600 shadow-md shadow-purple-600/10'
+                        ? 'bg-red-650 text-white border-red-600 shadow-md shadow-red-650/10'
                         : 'bg-slate-50 border-slate-100 text-slate-700 hover:bg-slate-100/50'
                     }`}
                   >
-                    <IconComp className={`h-5 w-5 mb-1 ${isActive ? 'text-white' : 'text-purple-600'}`} />
+                    <IconComp className={`h-5 w-5 mb-1 ${isActive ? 'text-white' : 'text-red-500'}`} />
                     <span className="text-[11px] font-bold font-bengali leading-none">{chan.titleBn}</span>
                   </button>
                 );
@@ -1282,10 +1282,10 @@ export default function App() {
                   <div className="space-y-4 font-sans">
                     <div className="flex items-center justify-between gap-2 border-b border-white pb-3">
                       <div className="flex items-center gap-2">
-                        <ChanIcon className="h-5 w-5 text-purple-600" />
+                        <ChanIcon className="h-5 w-5 text-red-500" />
                         <h4 className="font-extrabold text-[#111827] text-sm md:text-md font-bengali leading-none">{currentChan.titleBn}</h4>
                       </div>
-                      <span className="text-[10px] font-mono uppercase bg-white border border-slate-200 text-purple-600 px-2 py-0.5 rounded-md font-bold">
+                      <span className="text-[10px] font-mono uppercase bg-white border border-slate-200 text-red-600 px-2 py-0.5 rounded-md font-bold">
                         {currentChan.titleEn}
                       </span>
                     </div>
@@ -1300,7 +1300,7 @@ export default function App() {
                       </span>
                       <div className="flex flex-wrap gap-1">
                         {currentChan.tools.map((t, idx) => (
-                          <span key={idx} className="bg-white border text-slate-700 px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold hover:border-purple-300 transition-colors">
+                          <span key={idx} className="bg-white border text-slate-700 px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold hover:border-red-300 transition-colors">
                             {t}
                           </span>
                         ))}
@@ -1332,7 +1332,7 @@ export default function App() {
                   </div>
                   <div>
                     <h3 className="text-md sm:text-lg font-bold text-slate-990 font-bengali leading-none">লাইভ চ্যাট হেল্প সেন্টার</h3>
-                    <p className="text-[10px] text-[#bc8aff] font-mono font-black uppercase mt-1 tracking-wider">Direct Live Connection</p>
+                    <p className="text-[10px] text-red-500 font-mono font-black uppercase mt-1 tracking-wider">Direct Live Connection</p>
                   </div>
                 </div>
 
@@ -1351,8 +1351,8 @@ export default function App() {
               {!chatUser ? (
                 /* STEP 1: Client sets up username by typing and hitting ENTER */
                 <div className="flex-1 flex flex-col justify-center items-center text-center p-4 space-y-4">
-                  <div className="p-4 rounded-full bg-purple-50 text-purple-600 mb-1 border border-purple-100">
-                    <User className="h-8 w-8 text-purple-600" />
+                  <div className="p-4 rounded-full bg-purple-50 text-red-500 mb-1 border border-purple-100">
+                    <User className="h-8 w-8 text-red-500" />
                   </div>
                   <div className="space-y-1">
                     <h4 className="text-sm font-bold text-slate-900 font-bengali">লাইভ চ্যাট শুরু করতে আপনার নাম লিখুন</h4>
@@ -1368,13 +1368,13 @@ export default function App() {
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') handleRegisterChatUser(e);
                       }}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm text-center text-slate-800 placeholder-slate-400 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-200 transition-all font-bengali"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm text-center text-slate-800 placeholder-slate-400 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-purple-200 transition-all font-bengali"
                       maxLength={25}
                       required
                     />
                     <button 
                       type="submit"
-                      className="w-full bg-purple-600 hover:bg-purple-700 text-white font-extrabold py-3 rounded-xl hover:shadow-lg active:scale-95 transition-all text-xs font-bengali"
+                      className="w-full bg-red-650 hover:bg-red-700 text-white font-extrabold py-3 rounded-xl hover:shadow-lg active:scale-95 transition-all text-xs font-bengali"
                     >
                       চ্যাট শুরু করুন &rarr;
                     </button>
@@ -1390,16 +1390,16 @@ export default function App() {
                       <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-ping" />
                       SYSTEM STATUS: ONLINE
                     </span>
-                    <span>Chatting as: <strong className="text-purple-600 uppercase underline">{chatUser}</strong></span>
+                    <span>Chatting as: <strong className="text-red-600 uppercase underline">{chatUser}</strong></span>
                   </div>
 
                   {/* Message scroll log container */}
-                  <div className="flex-1 overflow-y-auto space-y-3.5 pr-1.5 scrollbar-thin scrollbar-thumb-purple-200 scrollbar-track-transparent">
+                  <div className="flex-1 overflow-y-auto space-y-3.5 pr-1.5 scrollbar-thin scrollbar-thumb-red-205 scrollbar-track-transparent">
                     
                     {/* Hello greeting from Nabil */}
                     <div className="flex justify-start">
                       <div className="bg-slate-50 border border-slate-100 rounded-2xl p-3.5 max-w-[85%] font-bengali text-xs space-y-1 relative shadow-xs">
-                        <div className="flex items-center gap-1 text-[10px] font-mono font-extrabold uppercase text-purple-600">
+                        <div className="flex items-center gap-1 text-[10px] font-mono font-extrabold uppercase text-red-600">
                           <Award className="h-3 w-3" />
                           <span>নাবিল আহমেদ (Admin Support)</span>
                         </div>
@@ -1424,11 +1424,11 @@ export default function App() {
                         <div key={msg.id} className="space-y-1.5">
                           {/* Visitor user custom text bubble */}
                           <div className="flex justify-end">
-                            <div className="bg-[#f0e6ff] text-[#4c1d95] rounded-2xl p-3 max-w-[85%] text-xs shadow-xs text-right border border-[#e5d5fe]">
+                            <div className="bg-[#f5f3ff] text-[#991b1b] rounded-2xl p-3 max-w-[85%] text-xs shadow-xs text-right border border-[#e9d5ff]">
                               <p className="font-bengali leading-relaxed text-left font-medium">
                                 {msg.messageText}
                               </p>
-                              <span className="text-[8px] text-purple-600 font-mono mt-1 block">
+                              <span className="text-[8px] text-red-600 font-mono mt-1 block">
                                 {new Date(msg.createdAt).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}
                               </span>
                             </div>
@@ -1474,14 +1474,14 @@ export default function App() {
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') handleSendLiveMessage(e);
                       }}
-                      className="flex-1 bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-purple-600 focus:ring-1 focus:ring-purple-200 transition-all font-bengali"
+                      className="flex-1 bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-purple-200 transition-all font-bengali"
                       maxLength={180}
                       required
                     />
                     <button 
                       type="submit" 
                       disabled={isSendingMsg || !chatMessage.trim()}
-                      className="bg-[#6d28d9] text-white p-3 rounded-xl hover:bg-purple-700 disabled:bg-slate-200 disabled:text-slate-400 transition-all flex items-center justify-center shrink-0 cursor-pointer"
+                      className="bg-red-650 text-white p-3 rounded-xl hover:bg-red-700 disabled:bg-slate-200 disabled:text-slate-400 transition-all flex items-center justify-center shrink-0 cursor-pointer shadow-md shadow-red-650/10"
                     >
                       <Send className="h-4.5 w-4.5" />
                     </button>
@@ -1496,7 +1496,7 @@ export default function App() {
           {/* Quick Core Benefits widget */}
           <section className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-8 shadow-sm font-sans space-y-4">
             <h4 className="text-xs sm:text-sm font-extrabold text-slate-900 tracking-wider uppercase flex items-center gap-2">
-              <Lightbulb className="h-4.5 w-4.5 text-purple-600" />
+              <Lightbulb className="h-4.5 w-4.5 text-red-500" />
               <span>কেন ডিজিটাল মার্কেটিং ফানেল দরকার?</span>
             </h4>
             <div className="space-y-3 text-xs text-slate-600 font-bengali leading-relaxed font-normal">
@@ -1505,15 +1505,15 @@ export default function App() {
               </p>
               <div className="space-y-1.5 pl-1">
                 <div className="flex items-start gap-2">
-                  <Check className="h-4 w-4 bg-purple-50 text-purple-600 p-0.5 rounded-full shrink-0 mt-0.5" />
+                  <Check className="h-4 w-4 bg-purple-50 border border-purple-100/60 text-red-650 p-0.5 rounded-md shrink-0 mt-0.5" />
                   <span>টার্গেটিং কাস্টমারদের কাছে ইনস্ট্যান্ট সরাসরি পৌঁছানো সম্ভব।</span>
                 </div>
                 <div className="flex items-start gap-2">
-                  <Check className="h-4 w-4 bg-purple-50 text-purple-600 p-0.5 rounded-full shrink-0 mt-0.5" />
+                  <Check className="h-4 w-4 bg-purple-50 border border-purple-100/60 text-red-650 p-0.5 rounded-md shrink-0 mt-0.5" />
                   <span>গুগল অনুসন্ধানের সেরা কিওয়ার্ড ব্যবহারের মাধ্যমে র্যাঙ্ক বুস্ট।</span>
                 </div>
                 <div className="flex items-start gap-2">
-                  <Check className="h-4 w-4 bg-purple-50 text-purple-600 p-0.5 rounded-full shrink-0 mt-0.5" />
+                  <Check className="h-4 w-4 bg-purple-50 border border-purple-100/60 text-red-650 p-0.5 rounded-md shrink-0 mt-0.5" />
                   <span>ক্রেতাদের মনের ভয়ভীতি দূরীকরণে পারফেক্ট লাইভ কনভার্শন ফানেল।</span>
                 </div>
               </div>
