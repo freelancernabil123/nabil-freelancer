@@ -58,7 +58,7 @@ import {
   LifeBuoy
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-const nabilProfileImg = "/src/assets/images/nabil_exact_profile_1781858748715.jpg";
+import nabilProfileImg from "./assets/images/nabil_exact_profile_1781858748715.jpg";
 
 // Interfaces
 interface Note {
@@ -162,6 +162,7 @@ export default function App() {
   const [aboutMe, setAboutMe] = useState(DEFAULT_ABOUT_ME);
   const [aboutMeInput, setAboutMeInput] = useState(DEFAULT_ABOUT_ME);
   const [isUpdatingAboutMe, setIsUpdatingAboutMe] = useState(false);
+  const [isCompressingImage, setIsCompressingImage] = useState(false);
 
   const categoriesList = [
     { value: 'SEO', label: 'সার্চ ইঞ্জিন অপটিমাইজেশন (SEO)' },
@@ -379,11 +380,15 @@ export default function App() {
     const unsubscribeAbout = onSnapshot(doc(db, 'settings', 'aboutMe'), (docSnap) => {
       if (docSnap.exists()) {
         const data = docSnap.data();
+        const cleanedProfileImg = (data.profileImg && !data.profileImg.startsWith('/src/assets/')) 
+          ? data.profileImg 
+          : DEFAULT_ABOUT_ME.profileImg;
+
         const merged = {
           title: data.title || DEFAULT_ABOUT_ME.title,
           name: data.name || DEFAULT_ABOUT_ME.name,
           role: data.role || DEFAULT_ABOUT_ME.role,
-          profileImg: data.profileImg || DEFAULT_ABOUT_ME.profileImg,
+          profileImg: cleanedProfileImg,
           bioIntro: data.bioIntro || DEFAULT_ABOUT_ME.bioIntro,
           bioBody: data.bioBody || DEFAULT_ABOUT_ME.bioBody,
           seoText: data.seoText || DEFAULT_ABOUT_ME.seoText,
@@ -434,20 +439,67 @@ export default function App() {
     }
   };
 
-  // Image upload base64 converter helper
+  // Image upload base64 converter helper with automatic Canvas compression
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      if (file.size > 800000) { // Limit to 800KB for Firestore documents limit
-        showToast("দয়া করে ৮০০ কেবি এর নিচের সাইজের ছবি আপলোড করুন।");
-        return;
-      }
+      setIsCompressingImage(true);
       const reader = new FileReader();
-      reader.onloadend = () => {
-        if (typeof reader.result === 'string') {
-          setAboutMeInput(prev => ({ ...prev, profileImg: reader.result as string }));
-          showToast("ছবি সফলভাবে নির্বাচন করা হয়েছে!");
-        }
+      reader.onload = (event) => {
+        const img = new Image();
+        img.onload = () => {
+          try {
+            // Create canvas for compression and resizing
+            const canvas = document.createElement('canvas');
+            let width = img.width;
+            let height = img.height;
+
+            // Target square size suitable for profile images (e.g. 350x350)
+            const MAX_SIZE = 350;
+            if (width > height) {
+              if (width > MAX_SIZE) {
+                height *= MAX_SIZE / width;
+                width = MAX_SIZE;
+              }
+            } else {
+              if (height > MAX_SIZE) {
+                width *= MAX_SIZE / height;
+                height = MAX_SIZE;
+              }
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+
+            const ctx = canvas.getContext('2d');
+            if (ctx) {
+              ctx.drawImage(img, 0, 0, width, height);
+              // Convert to web-optimized JPEG at 0.75 quality (usually results in beautiful, ultra-light files of ~20-30KB)
+              const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.75);
+              setAboutMeInput(prev => ({ ...prev, profileImg: compressedDataUrl }));
+              showToast("ছবি সফলভাবে আপলোড এবং সাইজ অপ্টিমাইজ করা হয়েছে!");
+            } else {
+              // Fallback to original image if context cannot be acquired
+              setAboutMeInput(prev => ({ ...prev, profileImg: event.target?.result as string }));
+              showToast("ছবি সফলভাবে নির্বাচন করা হয়েছে!");
+            }
+          } catch (err) {
+            console.error("Canvas compression failed, falling back to original file.", err);
+            setAboutMeInput(prev => ({ ...prev, profileImg: event.target?.result as string }));
+            showToast("ছবি সফলভাবে নির্বাচন করা হয়েছে!");
+          } finally {
+            setIsCompressingImage(false);
+          }
+        };
+        img.onerror = () => {
+          showToast("ছবি লোড করতে সমস্যা হয়েছে, অনুগ্রহ করে অন্য ছবি দিয়ে চেষ্টা করুন।");
+          setIsCompressingImage(false);
+        };
+        img.src = event.target?.result as string;
+      };
+      reader.onerror = () => {
+        showToast("ফাইল পড়তে ব্যর্থ হয়েছে, আবার চেষ্টা করুন।");
+        setIsCompressingImage(false);
       };
       reader.readAsDataURL(file);
     }
@@ -1344,8 +1396,12 @@ export default function App() {
                         <form onSubmit={handleUpdateAboutMe} className="space-y-4 font-sans text-xs">
                           {/* Profile Photo selector */}
                           <div className="bg-slate-50 border border-slate-100/80 p-3 sm:p-4 rounded-xl flex flex-col sm:flex-row items-center gap-4">
-                            <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden border-2 border-white shadow-md shrink-0 bg-slate-200">
-                              <img src={aboutMeInput.profileImg} className="w-full h-full object-cover" />
+                            <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden border-2 border-white shadow-md shrink-0 bg-slate-200 flex items-center justify-center">
+                              {isCompressingImage ? (
+                                <RefreshCw className="h-5 w-5 text-red-600 animate-spin" />
+                              ) : (
+                                <img src={aboutMeInput.profileImg} className="w-full h-full object-cover" />
+                              )}
                             </div>
                             <div className="flex-1 space-y-2 w-full text-left">
                               <span className="block text-[10px] font-mono uppercase tracking-wider text-slate-500">Profile Picture (ছবি আপলোড করুন)</span>
