@@ -979,7 +979,7 @@ export default function App() {
                     <div className="max-w-xl bg-white border border-slate-100/50 rounded-2xl p-4 sm:p-6 space-y-6">
                       <div>
                         <h4 className="text-sm font-extrabold text-slate-900 tracking-wide uppercase font-sans flex items-center gap-2">
-                          <Lock className="h-4 w-4 text-red-650" />
+                          <Lock className="h-4 w-4 text-red-600" />
                           লগইন তথ্য পরিবর্তন করুন
                         </h4>
                         <p className="text-xs text-slate-500 mt-1 font-bengali">
@@ -1116,7 +1116,7 @@ export default function App() {
           >
             <a 
               href="#help-center" 
-              className="bg-red-650 hover:bg-red-700 text-white font-extrabold px-6 py-3.5 text-xs rounded-xl shadow-lg shadow-red-650/10 active:scale-95 transition-all uppercase tracking-wider flex items-center gap-1.5"
+              className="bg-red-600 hover:bg-red-700 text-white font-extrabold px-6 py-3.5 text-xs rounded-xl shadow-lg shadow-red-600/10 active:scale-95 transition-all uppercase tracking-wider flex items-center gap-1.5"
             >
               <MessageSquare className="h-4 w-4" />
               লাইভ হেল্প সেন্টার চ্যাট
@@ -1124,7 +1124,7 @@ export default function App() {
             
             <a 
               href="#channel-hub" 
-              className="bg-white border border-slate-200 text-slate-700 hover:border-red-300 font-extrabold px-6 py-3.5 text-xs rounded-xl hover:text-red-650 active:scale-95 transition-all uppercase tracking-wider flex items-center gap-1"
+              className="bg-white border border-slate-200 text-slate-700 hover:border-red-300 font-extrabold px-6 py-3.5 text-xs rounded-xl hover:text-red-600 active:scale-95 transition-all uppercase tracking-wider flex items-center gap-1"
             >
               <span>Explore Marketing Blueprint</span>
               <ChevronRight className="h-3.5 w-3.5" />
@@ -1221,7 +1221,7 @@ export default function App() {
 
                       <div className="space-y-2.5">
                         <div className="flex items-center gap-2 text-[10.5px] font-bold tracking-wider">
-                          <span className="px-2.5 py-0.5 rounded-md bg-purple-50 text-red-650 border border-purple-100 font-bengali">
+                          <span className="px-2.5 py-0.5 rounded-md bg-purple-50 text-red-600 border border-purple-100 font-bengali">
                             {getCategoryLabel(note.category)}
                           </span>
                           <span className="text-slate-400 flex items-center gap-1 font-mono text-[9.5px]">
@@ -1261,7 +1261,7 @@ export default function App() {
                     }}
                     className={`flex flex-col items-center justify-center p-3 rounded-2xl border text-center transition-all cursor-pointer ${
                       isActive 
-                        ? 'bg-red-650 text-white border-red-600 shadow-md shadow-red-650/10'
+                        ? 'bg-red-600 text-white border-red-600 shadow-md shadow-red-600/10'
                         : 'bg-slate-50 border-slate-100 text-slate-700 hover:bg-slate-100/50'
                     }`}
                   >
@@ -1374,7 +1374,7 @@ export default function App() {
                     />
                     <button 
                       type="submit"
-                      className="w-full bg-red-650 hover:bg-red-700 text-white font-extrabold py-3 rounded-xl hover:shadow-lg active:scale-95 transition-all text-xs font-bengali"
+                      className="w-full bg-red-600 hover:bg-red-700 text-white font-extrabold py-3 rounded-xl hover:shadow-lg active:scale-95 transition-all text-xs font-bengali"
                     >
                       চ্যাট শুরু করুন &rarr;
                     </button>
@@ -1481,7 +1481,7 @@ export default function App() {
                     <button 
                       type="submit" 
                       disabled={isSendingMsg || !chatMessage.trim()}
-                      className="bg-red-650 text-white p-3 rounded-xl hover:bg-red-700 disabled:bg-slate-200 disabled:text-slate-400 transition-all flex items-center justify-center shrink-0 cursor-pointer shadow-md shadow-red-650/10"
+                      className="bg-red-600 text-white p-3 rounded-xl hover:bg-red-700 disabled:bg-slate-200 disabled:text-slate-400 transition-all flex items-center justify-center shrink-0 cursor-pointer shadow-md shadow-red-600/10"
                     >
                       <Send className="h-4.5 w-4.5" />
                     </button>
@@ -1505,15 +1505,15 @@ export default function App() {
               </p>
               <div className="space-y-1.5 pl-1">
                 <div className="flex items-start gap-2">
-                  <Check className="h-4 w-4 bg-purple-50 border border-purple-100/60 text-red-650 p-0.5 rounded-md shrink-0 mt-0.5" />
+                  <Check className="h-4 w-4 bg-purple-50 border border-purple-100/60 text-red-600 p-0.5 rounded-md shrink-0 mt-0.5" />
                   <span>টার্গেটিং কাস্টমারদের কাছে ইনস্ট্যান্ট সরাসরি পৌঁছানো সম্ভব।</span>
                 </div>
                 <div className="flex items-start gap-2">
-                  <Check className="h-4 w-4 bg-purple-50 border border-purple-100/60 text-red-650 p-0.5 rounded-md shrink-0 mt-0.5" />
+                  <Check className="h-4 w-4 bg-purple-50 border border-purple-100/60 text-red-600 p-0.5 rounded-md shrink-0 mt-0.5" />
                   <span>গুগল অনুসন্ধানের সেরা কিওয়ার্ড ব্যবহারের মাধ্যমে র্যাঙ্ক বুস্ট।</span>
                 </div>
                 <div className="flex items-start gap-2">
-                  <Check className="h-4 w-4 bg-purple-50 border border-purple-100/60 text-red-650 p-0.5 rounded-md shrink-0 mt-0.5" />
+                  <Check className="h-4 w-4 bg-purple-50 border border-purple-100/60 text-red-600 p-0.5 rounded-md shrink-0 mt-0.5" />
                   <span>ক্রেতাদের মনের ভয়ভীতি দূরীকরণে পারফেক্ট লাইভ কনভার্শন ফানেল।</span>
                 </div>
               </div>
